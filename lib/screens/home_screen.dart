@@ -9,50 +9,63 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Smart Pool'),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/images/POOL.jpg'), 
-            fit: BoxFit.cover,
-          ),
+        leading: Image.asset(
+          'lib/assets/images/Logo.png',
+          width: 50,
+          height: 50,
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ListTile(
-                title: Center(
-                  child: Text(
+        backgroundColor: const Color.fromARGB(255, 70, 200, 243),
+      ),
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: const AssetImage('lib/assets/images/POOL.jpg'), 
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+              colorFilter: ColorFilter.mode(
+                const Color.fromARGB(255, 70, 200, 243).withOpacity(0.25),
+                BlendMode.darken,
+              ),
+              
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ListTile(
+                  title: Text(
                     'Bienvenido a Tu Piscina',
+                    textAlign: TextAlign.center,
                     style: AppTheme.lightTheme.textTheme.headlineLarge,
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/LoginScreen');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  textStyle: AppTheme.lightTheme.textTheme.headlineMedium,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/LoginScreen');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.secondaryColor,
+                    textStyle: AppTheme.lightTheme.textTheme.headlineMedium,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  ),
+                  child: const Text('Iniciar sesión'),
                 ),
-                child: const Text('Iniciar sesión'),
-              ),
-              GestureDetector(
-                onTap: () { 
-                  Navigator.pushNamed(context, '/RegisterScreen');
-                },
-                child: const Text(
-                  '¿No tienes cuenta? Regístrate',
-                  style: TextStyle(  
-                    color: AppTheme.primaryColor,
-                    fontSize: 16,
+                GestureDetector(
+                  onTap: () { 
+                    Navigator.pushNamed(context, '/RegisterScreen');
+                  },
+                  child: const Text(
+                    '¿No tienes cuenta? Regístrate',
+                    style: TextStyle(  
+                      color: AppTheme.primaryColor,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
