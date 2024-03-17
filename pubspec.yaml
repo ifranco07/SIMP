@@ -7,8 +7,11 @@ environment:
   sdk: '>=3.4.0-220.0.dev <4.0.0'
 
 dependencies:
+  firebase_auth: ^4.17.9
+  firebase_core: ^2.27.1
   flutter:
     sdk: flutter
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +20,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - lib/assets/images/POOL.jpg
+    - lib/assets/images/POOL2.jpg
+    - lib/assets/images/Piscina.jpg
+    - lib/assets/images/textura-agua-piscina.jpg
+    - lib/assets/images/facebook.png
+    - lib/assets/images/Google.png
+    - lib/assets/images/Logo.png
+
