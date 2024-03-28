@@ -46,7 +46,7 @@ class ViewsUsersScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RegisterUsersScreen()),
+                MaterialPageRoute(builder: (context) => const RegisterUsersScreen()),
               );
             },
             icon: const Icon(Icons.add),

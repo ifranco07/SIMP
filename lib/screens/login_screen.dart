@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
 import 'users/Admin/adminhome_screen.dart';
 import 'users/Cliente/customhome_screen.dart';
-import 'users/User/userhome_screen.dart';
+import 'resetpassword_screen.dart'; // Importa la pantalla de restablecimiento de contraseña
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key});
@@ -13,72 +13,99 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio de Sesión'),
-        leading: Image.asset(
-          'lib/assets/images/Logo.png',
-          width: 50,
-          height: 50,
-        ),
-        backgroundColor: const Color.fromARGB(255, 70, 200, 243),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Correo/Usuario',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor, ingresa tu correo/usuario';
-                }
-                // Validar que el correo/usuario contenga letras, números y caracteres especiales
-                final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                if (!emailRegex.hasMatch(value)) {
-                  return 'Correo/usuario inválido';
-                }
-                return null;
-              },
+      body: Stack(
+        children: [
+          // Imagen de fondo
+          Positioned.fill(
+            child: Image.asset(
+              'lib/assets/images/textura-agua-piscina.jpg',
+              fit: BoxFit.cover,
             ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Contraseña',
-                border: OutlineInputBorder(),
+          ),
+          Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              height: MediaQuery.of(context).size.height * 0.4, // Ajusta el ancho del contenedor
+              padding: const EdgeInsets.all(18.0),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8), // Ajusta la transparencia del fondo
+                borderRadius: BorderRadius.circular(16.0),
               ),
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Por favor, ingresa tu contraseña';
-                }
-                // Validar que la contraseña contenga letras, números y caracteres especiales
-                final passwordRegex = RegExp(r'^[\w@-]*$');
-                if (!passwordRegex.hasMatch(value)) {
-                  return 'Contraseña inválida';
-                }
-                return null;
-              },
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (_validateInputs(context)) {
-                  _loginUser(context);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                textStyle: const TextStyle(color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Correo/Usuario',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingresa tu correo/usuario';
+                      }
+                      // Aquí puedes agregar más validaciones si es necesario
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Contraseña',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingresa tu contraseña';
+                      }
+                      // Aquí puedes agregar más validaciones si es necesario
+                      return null;
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_validateInputs(context)) {
+                        _loginUser(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      textStyle: const TextStyle(color: Colors.white),
+                    ),
+                    child: const Text('Iniciar Sesión'),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('O '),
+                      Image.asset(
+                        'lib/assets/images/Google.png', // Ruta de la imagen del logo de Google
+                        width: 24,
+                        height: 24,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ResetPasswordScreen'); // Navega hacia ResetPasswordScreen
+                    },
+                    child: const Text(
+                      '¿Olvidaste tu contraseña?',
+                      style: TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontSize: 12, // Ajusta el tamaño de la letra
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: const Text('Iniciar Sesión'),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -102,7 +129,7 @@ class LoginScreen extends StatelessWidget {
     // Ejemplo:
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const AdminHomeScreen()),
+      MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '',)),
     );
   }
 }

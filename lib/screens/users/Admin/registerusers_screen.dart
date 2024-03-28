@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RegisterUsersScreen extends StatefulWidget {
+  const RegisterUsersScreen({super.key});
+
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();
 }
@@ -10,13 +12,14 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   String? _selectedUserRole;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registro de Usuarios'),
+        title: const Text('Registro de Usuarios'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -25,14 +28,14 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Nombre'),
+              decoration: const InputDecoration(labelText: 'Nombre'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _lastNameController,
-              decoration: InputDecoration(labelText: 'Apellido'),
+              decoration: const InputDecoration(labelText: 'Apellido'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             DropdownButtonFormField<String>(
               value: _selectedUserRole,
               onChanged: (newValue) {
@@ -47,29 +50,36 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
                   child: Text(value),
                 );
               }).toList(),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Rol',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Correo electrónico'),
+              decoration: const InputDecoration(labelText: 'Correo electrónico'),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Contraseña'),
+              decoration: const InputDecoration(labelText: 'Contraseña'),
               obscureText: true,
             ),
-            SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: null, // Botón inactivo
-              icon: Image.asset('ruta_de_tu_imagen.png'), // Cambia 'ruta_de_tu_imagen.png' por la ruta de tu imagen
-              label: Text('Registrar'),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _confirmPasswordController,
+              decoration: const InputDecoration(labelText: 'Confirmar Contraseña'),
+              obscureText: true,
             ),
-            SizedBox(height: 16),
-            Text('O'),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Lógica para registrar el usuario
+                },
+                child: const Text('Registrar'),
+              ),
+            ),
           ],
         ),
       ),

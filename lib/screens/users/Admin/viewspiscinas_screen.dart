@@ -26,7 +26,7 @@ class ViewPiscinasScreen extends StatelessWidget {
               'Piscinas Disponibles:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
                 itemCount: piscinas.length,

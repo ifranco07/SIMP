@@ -7,15 +7,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Smart Pool'),
-        leading: Image.asset(
-          'lib/assets/images/Logo.png',
-          width: 50,
-          height: 50,
-        ),
-        backgroundColor: const Color.fromARGB(255, 70, 200, 243),
-      ),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -27,7 +18,6 @@ class HomeScreen extends StatelessWidget {
                 const Color.fromARGB(255, 70, 200, 243).withOpacity(0.25),
                 BlendMode.darken,
               ),
-              
             ),
           ),
           child: Center(

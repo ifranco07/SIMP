@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
 import 'package:simp/screens/home_screen.dart';
+import 'package:simp/screens/resetpassword_screen.dart';
 
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
@@ -18,6 +19,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/LoginScreen': (context) => LoginScreen(),
         '/RegisterScreen': (context) => const RegisterScreen(),
+        '/ResetPasswordScreen': (context) => const ResetPasswordScreen(),
       },
     );
   }
