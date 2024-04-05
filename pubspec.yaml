@@ -14,6 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.1
+  image_picker: ^1.0.7
+  images_picker: ^1.2.11
 
 dev_dependencies:
   flutter_test:
@@ -30,4 +32,9 @@ flutter:
     - lib/assets/images/facebook.png
     - lib/assets/images/Google.png
     - lib/assets/images/Logo.png
+    - android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 

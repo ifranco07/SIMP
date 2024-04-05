@@ -7,11 +7,38 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, 
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(120.0),
+        child: AppBar(
+          backgroundColor: Colors.transparent, 
+          elevation: 0, 
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Colors.transparent, 
+                  Colors.black.withOpacity(0.001), 
+                ],
+              ),
+            ),
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.all(8.0), // Padding para el contenido del flexibleSpace
+            child: Image.asset(
+              'lib/assets/images/Logo.png', // Ruta de la imagen de tu logo
+              fit: BoxFit.contain,
+              height: 100, // Altura deseada de la imagen
+            ),
+          ),
+        ),
+      ),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: const AssetImage('lib/assets/images/POOL.jpg'), 
+              image: const AssetImage('lib/assets/images/POOL.jpg'),
               fit: BoxFit.cover,
               alignment: Alignment.center,
               colorFilter: ColorFilter.mode(
@@ -38,17 +65,18 @@ class HomeScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.secondaryColor,
                     textStyle: AppTheme.lightTheme.textTheme.headlineMedium,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 15),
                   ),
                   child: const Text('Iniciar sesión'),
                 ),
                 GestureDetector(
-                  onTap: () { 
+                  onTap: () {
                     Navigator.pushNamed(context, '/RegisterScreen');
                   },
                   child: const Text(
                     '¿No tienes cuenta? Regístrate',
-                    style: TextStyle(  
+                    style: TextStyle(
                       color: AppTheme.primaryColor,
                       fontSize: 16,
                     ),

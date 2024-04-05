@@ -17,128 +17,184 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   bool _acceptTerms = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Registro de Administrador'),
-        leading: Image.asset(
-          'lib/assets/images/Logo.png',
-          width: 50,
-          height: 50,
-        ),
-        backgroundColor: const Color.fromARGB(255, 70, 200, 243),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            TextFormField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(
-                labelText: 'Apellido: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Nombre de usuario: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _emailPhoneController,
-              decoration: const InputDecoration(
-                labelText: 'Correo/Teléfono: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Contraseña: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(
-                labelText: 'Confirmar Contraseña: ',
-                labelStyle: TextStyle(
-                  color: AppTheme.secondaryColor,
-                ),
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Checkbox(
-                  value: _acceptTerms,
-                  onChanged: (value) {
-                    setState(() {
-                      _acceptTerms = value!;
-                    });
-                  },
-                ),
-                Text(
-                  'He leído y acepto los términos y condiciones',
-                  style: TextStyle(
-                    color: _acceptTerms ? Colors.black : Colors.red,
-                    fontSize: 14,
-                  ),
-                ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.transparent,
+                Colors.black.withOpacity(0.001),
               ],
             ),
-            TextButton(
-              onPressed: () {
-                // Implementar la lógica para mostrar los términos y condiciones
-              },
-              child: const Text(
-                'Ver Política de Términos y Condiciones',
-                style: TextStyle(fontSize: 12),
+          ),
+          alignment: Alignment.topLeft,
+          child: Image.asset(
+            'lib/assets/images/Logo.png',
+            fit: BoxFit.contain,
+            height: 100,
+          ),
+        ),
+      ),
+      body: Stack(
+        children: [
+          Image.asset(
+            'lib/assets/images/textura-agua-piscina.jpg',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 1.0,
+              child: Container(
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 15), // Espacio entre el título y el formulario
+                      _buildRoundedTextField(_firstNameController, 'Nombre'),
+                      const SizedBox(height: 16),
+                      _buildRoundedTextField(_lastNameController, 'Apellido'),
+                      const SizedBox(height: 16),
+                      _buildRoundedTextField(_usernameController, 'Nombre de usuario'),
+                      const SizedBox(height: 16),
+                      _buildRoundedTextField(_emailPhoneController, 'Correo/Teléfono'),
+                      const SizedBox(height: 16),
+                      _buildRoundedPasswordField(_passwordController, 'Contraseña', _obscurePassword, () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      }),
+                      const SizedBox(height: 16),
+                      _buildRoundedPasswordField(_confirmPasswordController, 'Confirmar Contraseña', _obscureConfirmPassword, () {
+                        setState(() {
+                          _obscureConfirmPassword = !_obscureConfirmPassword;
+                        });
+                      }),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: _acceptTerms,
+                            onChanged: (value) {
+                              setState(() {
+                                _acceptTerms = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'He leído y acepto los términos y condiciones',
+                            style: TextStyle(
+                              color: _acceptTerms ? Colors.black : Colors.red,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // Implementar la lógica para mostrar los términos y condiciones
+                        },
+                        child: const Text(
+                          'Ver Política de Términos y Condiciones',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_validateInputs()) {
+                            _registerUser(context);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryColor,
+                          textStyle: const TextStyle(color: Colors.white),
+                        ),
+                        child: const Text('Registrarse'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                if (_validateInputs()) {
-                  _registerUser(context);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                textStyle: const TextStyle(color: Colors.white),
+          ),
+          Positioned(
+            top: 50.0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
-              child: const Text('Registrarse'),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoundedTextField(TextEditingController controller, String labelText) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(
+            color: AppTheme.secondaryColor,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoundedPasswordField(TextEditingController controller, String labelText, bool obscureText, Function() onPressed) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: AppTheme.secondaryColor,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+            onPressed: onPressed,
+          ),
         ),
       ),
     );
@@ -153,14 +209,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _confirmPasswordController.text.isNotEmpty &&
         _acceptTerms;
     if (!isValid) {
-      _showErrorAlert('Por favor, completa todos los campos y acepta los términos y condiciones');
+      _showErrorAlert(
+          'Por favor, completa todos los campos y acepta los términos y condiciones');
     }
     return isValid;
   }
 
   void _registerUser(BuildContext context) {
-    // Lógica para registrar al administrador y redirigirlo a su pantalla de inicio.
-    // Por ahora, simplemente redireccionaremos a la pantalla correspondiente al rol de administrador.
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '',)),

@@ -1,7 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
+import 'package:simp/Theme/app_theme.dart';
+
+class User {
+  final String name;
+  final String email;
+  final String? profileImage;
+
+  User({required this.name, required this.email, this.profileImage});
+}
 
 class RegisterUsersScreen extends StatefulWidget {
-  const RegisterUsersScreen({super.key});
+  const RegisterUsersScreen({Key? key}) : super(key: key);
 
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();
@@ -12,77 +24,233 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? _selectedUserRole;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  File? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Registro de Usuarios'),
+        title: const Text('Registro de Usuarios',
+            style: TextStyle(color: AppTheme.primaryColor)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nombre'),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Apellido'),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _selectedUserRole,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedUserRole = newValue;
-                });
-              },
-              items: ['Cliente', 'Usuario']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(
-                labelText: 'Rol',
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/images/textura-agua-piscina.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Correo electrónico'),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Contraseña'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(labelText: 'Confirmar Contraseña'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Lógica para registrar el usuario
-                },
-                child: const Text('Registrar'),
+            child: Center(
+              child: SingleChildScrollView(
+                primary: true,
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 150),
+                    _buildRoundedTextField(_nameController, 'Nombre'),
+                    const SizedBox(height: 12),
+                    _buildRoundedTextField(_lastNameController, 'Apellido'),
+                    const SizedBox(height: 12),
+                    _buildRoundedTextField(_emailController, 'Correo electrónico'),
+                    const SizedBox(height: 12),
+                    _buildRoundedDropdownButtonFormField(
+                        ['Cliente'], 'Rol'),
+                    const SizedBox(height: 12),
+                    _buildRoundedPasswordField(_passwordController,
+                        'Contraseña', _obscurePassword, () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    }),
+                    const SizedBox(height: 12),
+                    _buildRoundedPasswordField(_confirmPasswordController,
+                        'Confirmar Contraseña', _obscureConfirmPassword, () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    }),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _pickImage,
+                      child: const Text('Seleccionar imagen de perfil'),
+                    ),
+                    _selectedImage != null
+                        ? Image.file(_selectedImage!)
+                        : const Text('No se ha seleccionado una imagen'),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final newUser = User(
+                            name: _nameController.text,
+                            email: _emailController.text,
+                            profileImage: _selectedImage?.path,
+                          );
+                          Navigator.pop(context, newUser);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: AppTheme.primaryColor,
+                        ),
+                        child: const Text('Registrar'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoundedTextField(
+      TextEditingController controller, String labelText,
+      {bool obscureText = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
         ),
       ),
     );
   }
+
+  Widget _buildRoundedDropdownButtonFormField(
+      List<String> items, String labelText,
+      {bool obscureText = false}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: DropdownButtonFormField<String>(
+        value: _selectedUserRole,
+        onChanged: (newValue) {
+          setState(() {
+            _selectedUserRole = newValue;
+          });
+        },
+        items: items.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          );
+        }).toList(),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+        ),
+        selectedItemBuilder: (BuildContext context) {
+          return items.map<Widget>((String item) {
+            return Container(
+              color: Colors.white.withOpacity(0.7),
+              child: Text(
+                item,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            );
+          }).toList();
+        },
+      ),
+    );
+  }
+
+  Widget _buildRoundedPasswordField(TextEditingController controller,
+      String labelText, bool obscureText, Function() onPressed) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.7),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+            onPressed: onPressed,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _pickImage() async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    setState(() {
+      _selectedImage = File(pickedFile.path);
+      // Muestra la imagen seleccionada como una vista previa
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              width: 200,
+              height: 200,
+              child: _selectedImage != null ? Image.file(_selectedImage!) : Container(),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cerrar'),
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+ }
 }
