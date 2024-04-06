@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({Key? key}) : super(key: key);
+  const ResetPasswordScreen({super.key});
 
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
@@ -13,7 +13,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _securityCodeController = TextEditingController();
 
-  bool _isAdmin = false;
+  final bool _isAdmin = false;
 
   @override
   Widget build(BuildContext context) {

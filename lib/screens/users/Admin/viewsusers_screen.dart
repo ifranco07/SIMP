@@ -12,7 +12,7 @@ class User {
 }
 
 class ViewsUsersScreen extends StatefulWidget {
-  const ViewsUsersScreen({Key? key}) : super(key: key);
+  const ViewsUsersScreen({super.key});
 
   @override
   _ViewsUsersScreenState createState() => _ViewsUsersScreenState();
@@ -139,7 +139,7 @@ class UserSearchDelegate extends SearchDelegate<String> {
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context).copyWith(
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.black),
+        hintStyle: const TextStyle(color: Colors.black),
         border: InputBorder.none,
         fillColor: Colors.grey[200],
         filled: true,

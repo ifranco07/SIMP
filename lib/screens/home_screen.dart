@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key});
+  const HomeScreen({super.key,});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true, 
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0),
+        preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
           backgroundColor: Colors.transparent, 
           elevation: 0, 
@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
             child: Image.asset(
               'lib/assets/images/Logo.png', // Ruta de la imagen de tu logo
               fit: BoxFit.contain,
-              height: 100, // Altura deseada de la imagen
+              height: 100, 
             ),
           ),
         ),

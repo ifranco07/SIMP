@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ViewPiscinasScreen extends StatelessWidget {
-  const ViewPiscinasScreen({Key? key}) : super(key: key);
+  const ViewPiscinasScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

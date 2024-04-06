@@ -13,7 +13,7 @@ class User {
 }
 
 class RegisterUsersScreen extends StatefulWidget {
-  const RegisterUsersScreen({Key? key}) : super(key: key);
+  const RegisterUsersScreen({super.key});
 
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();
@@ -53,7 +53,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
             child: Center(
               child: SingleChildScrollView(
                 primary: true,
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -135,7 +135,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
             color: Colors.black,
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: const BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(12.0),
           ),
         ),
@@ -144,8 +144,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
   }
 
   Widget _buildRoundedDropdownButtonFormField(
-      List<String> items, String labelText,
-      {bool obscureText = false}) {
+      List<String> items, String labelText) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -212,7 +211,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
             color: Colors.black,
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: const BorderSide(color: Colors.black),
             borderRadius: BorderRadius.circular(12.0),
           ),
           suffixIcon: IconButton(
@@ -234,7 +233,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Container(
+            content: SizedBox(
               width: 200,
               height: 200,
               child: _selectedImage != null ? Image.file(_selectedImage!) : Container(),
@@ -244,7 +243,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Cerrar'),
+                child: const Text('Cerrar'),
               ),
             ],
           );

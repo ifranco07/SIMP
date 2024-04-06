@@ -3,7 +3,7 @@ import 'package:simp/Theme/app_theme.dart';
 import 'users/Admin/adminhome_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key});
+  const RegisterScreen({super.key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -64,7 +64,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 15), // Espacio entre el título y el formulario
+                      const SizedBox(height: 15), 
                       _buildRoundedTextField(_firstNameController, 'Nombre'),
                       const SizedBox(height: 16),
                       _buildRoundedTextField(_lastNameController, 'Apellido'),
@@ -133,7 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 50.0,
             left: 0,
             right: 0,
@@ -163,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             color: AppTheme.secondaryColor,
           ),
           border: OutlineInputBorder(

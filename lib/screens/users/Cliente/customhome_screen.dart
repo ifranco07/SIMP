@@ -4,7 +4,7 @@ import 'package:simp/Theme/app_theme.dart';
 class CustomHomeScreen extends StatelessWidget {
   final String clienteName; // Nombre del cliente
 
-  const CustomHomeScreen({Key? key, required this.clienteName}) : super(key: key);
+  const CustomHomeScreen({super.key, required this.clienteName});
 
   @override
   Widget build(BuildContext context) {

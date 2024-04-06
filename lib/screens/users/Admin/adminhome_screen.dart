@@ -7,21 +7,21 @@ import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 class AdminHomeScreen extends StatelessWidget {
   final String adminName; // Nombre del administrador
 
-  const AdminHomeScreen({Key? key, required this.adminName}) : super(key: key);
+  const AdminHomeScreen({super.key, required this.adminName});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(120.0),
+        preferredSize: const Size.fromHeight(120.0),
          // Ajusta la altura del AppBar
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: Container( 
-            padding: EdgeInsets.only(top: 20.0),// Ajusta el padding para mover el AppBar hacia abajo
+            padding: const EdgeInsets.only(top: 20.0),// Ajusta el padding para mover el AppBar hacia abajo
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
