@@ -13,10 +13,7 @@ dependencies:
   firebase_database: ^10.4.11
   flutter:
     sdk: flutter
-  flutter_plugin_android_lifecycle: ^2.0.17
   google_fonts: ^6.2.1
-  image_picker: ^1.0.7
-  images_picker: ^1.2.11
 
 dev_dependencies:
   flutter_test:

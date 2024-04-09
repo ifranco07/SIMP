@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 import 'package:simp/Theme/app_theme.dart';
 
@@ -80,14 +79,6 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
                         _obscureConfirmPassword = !_obscureConfirmPassword;
                       });
                     }),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: _pickImage,
-                      child: const Text('Seleccionar imagen de perfil'),
-                    ),
-                    _selectedImage != null
-                        ? Image.file(_selectedImage!)
-                        : const Text('No se ha seleccionado una imagen'),
                     const SizedBox(height: 12),
                     SizedBox(
                       height: 50,
@@ -222,34 +213,4 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
       ),
     );
   }
-
-  void _pickImage() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  if (pickedFile != null) {
-    setState(() {
-      _selectedImage = File(pickedFile.path);
-      // Muestra la imagen seleccionada como una vista previa
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SizedBox(
-              width: 200,
-              height: 200,
-              child: _selectedImage != null ? Image.file(_selectedImage!) : Container(),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cerrar'),
-              ),
-            ],
-          );
-        },
-      );
-    });
-  }
- }
 }
