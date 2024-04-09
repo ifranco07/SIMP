@@ -31,13 +31,13 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
+          backgroundColor: MaterialStateProperty.all(
             const Color.fromARGB(255, 255, 255, 255),
           ),
-          foregroundColor: WidgetStateProperty.all(
+          foregroundColor: MaterialStateProperty.all(
             const Color.fromARGB(255, 0, 0, 0),
           ),
-          textStyle: WidgetStateProperty.all(GoogleFonts.pacifico(
+          textStyle: MaterialStateProperty.all(GoogleFonts.pacifico(
             fontSize: 25.0,
           ))),
     ),

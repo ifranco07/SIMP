@@ -15,7 +15,7 @@ class ViewsUsersScreen extends StatefulWidget {
   const ViewsUsersScreen({super.key});
 
   @override
-  _ViewsUsersScreenState createState() => _ViewsUsersScreenState();
+  State<ViewsUsersScreen> createState() => _ViewsUsersScreenState();
 }
 
 class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
