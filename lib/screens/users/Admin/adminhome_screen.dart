@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
-import 'package:simp/screens/users/Admin/viewsdata_screen.dart';
+import 'package:simp/screens/users/Admin/viewsreports_screen.dart';
 import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
@@ -125,7 +125,7 @@ class AdminHomeScreen extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ViewsUsersScreen()),
+                MaterialPageRoute(builder: (context) => const ViewsUsersScreen(userList: [],)),
               );
               break;
             case 1:

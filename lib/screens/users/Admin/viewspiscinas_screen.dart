@@ -19,30 +19,30 @@ class ViewPiscinasScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Piscinas Disponibles:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: piscinas.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(piscinas[index]),
-                      onTap: () {
-                        // Agregar lógica para mostrar detalles de la piscina
-                      },
-                    ),
-                  );
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Número de columnas en la cuadrícula
+            crossAxisSpacing: 16.0, // Espacio horizontal entre los elementos de la cuadrícula
+            mainAxisSpacing: 16.0, // Espacio vertical entre los elementos de la cuadrícula
+            childAspectRatio: 2, // Relación de aspecto de cada elemento (ancho / alto)
+          ),
+          itemCount: piscinas.length,
+          itemBuilder: (context, index) {
+            return Card(
+              elevation: 3, // Agregamos elevación a la tarjeta
+              child: InkWell(
+                onTap: () {
+                  // Agregar lógica para mostrar detalles de la piscina
                 },
+                child: Center(
+                  child: Text(
+                    piscinas[index],
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
