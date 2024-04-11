@@ -4,7 +4,7 @@ import 'viewsusers_screen.dart';
 class EditUserScreen extends StatelessWidget {
   final User user;
 
-  const EditUserScreen({required this.user});
+  const EditUserScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

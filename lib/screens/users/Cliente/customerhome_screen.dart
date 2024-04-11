@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
-import 'package:simp/screens/users/Cliente/control_screen.dart';
-import 'package:simp/screens/users/Cliente/control_screen.dart;
+import 'package:simp/screens/users/Cliente/datapool_screen.dart';
+import 'package:simp/screens/users/Cliente/reportsviews_screen.dart.dart';
 
-class CustomHomeScreen extends StatelessWidget {
-  final String clienteName; // Nombre del cliente
+class CustomerHomeScreen extends StatelessWidget {
+  final String clienteName;
 
-  const CustomHomeScreen({super.key, required this.clienteName, required String customName});
+  const CustomerHomeScreen({super.key, required this.clienteName});
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +14,12 @@ class CustomHomeScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
-         // Ajusta la altura del AppBar
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: Container( 
-            padding: const EdgeInsets.only(top: 20.0),// Ajusta el padding para mover el AppBar hacia abajo
+            padding: const EdgeInsets.only(top: 20.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -33,7 +32,7 @@ class CustomHomeScreen extends StatelessWidget {
             ),
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: const EdgeInsets.all(8.0), // Ajusta el padding para el contenido del flexibleSpace
+              padding: const EdgeInsets.all(8.0),
               child: Image.asset(
                 'lib/assets/images/Logo.png',
                 fit: BoxFit.contain,
@@ -94,7 +93,7 @@ class CustomHomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Bienvenido $clienteName', // Mostrar el nombre del cliente
+                  'Bienvenido $clienteName', // Mostrar el nombre del administrador
                   style: AppTheme.lightTheme.textTheme.headlineLarge,
                 ),
               ],
@@ -102,15 +101,15 @@ class CustomHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(// Hace transparente la barra de navegación
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.poll_outlined),
-            label: 'Control Piscinas',
+            icon: Icon(Icons.notes_sharp, color: Colors.black), // Cambia el color del icono
+            label: 'Reportes',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.data_saver_off),
-            label: 'Datos Piscinas',
+            icon: Icon(Icons.data_saver_off, color: Colors.black), // Cambia el color del icono
+            label: 'Datos',
           ),
         ],
         selectedItemColor: AppTheme.primaryColor,
@@ -120,7 +119,7 @@ class CustomHomeScreen extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ControlScreenconst()),
+                MaterialPageRoute(builder: (context) => const ViewsreportsScreen()),
               );
               break;
             case 1:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simp/Theme/app_theme.dart';
+import 'package:simp/screens/users/Cliente/customerhome_screen.dart';
 import 'users/Admin/adminhome_screen.dart';
 import 'resetpassword_screen.dart';
 
@@ -199,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
     // Aquí irá la lógica para validar el inicio de sesión y redirigir al usuario según su rol.
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '',)),
+      MaterialPageRoute(builder: (context) => const CustomerHomeScreen(clienteName: '',)),
     );
   }
 }

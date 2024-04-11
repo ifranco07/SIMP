@@ -5,7 +5,7 @@ import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
-  final String adminName; // Nombre del administrador
+  final String adminName; 
 
   const AdminHomeScreen({super.key, required this.adminName});
 
@@ -15,13 +15,12 @@ class AdminHomeScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
-         // Ajusta la altura del AppBar
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
           flexibleSpace: Container( 
-            padding: const EdgeInsets.only(top: 20.0),// Ajusta el padding para mover el AppBar hacia abajo
+            padding: const EdgeInsets.only(top: 20.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -34,7 +33,7 @@ class AdminHomeScreen extends StatelessWidget {
             ),
             alignment: Alignment.topLeft,
             child: Padding(
-              padding: const EdgeInsets.all(8.0), // Ajusta el padding para el contenido del flexibleSpace
+              padding: const EdgeInsets.all(8.0),
               child: Image.asset(
                 'lib/assets/images/Logo.png',
                 fit: BoxFit.contain,

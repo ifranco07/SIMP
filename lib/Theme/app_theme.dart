@@ -1,26 +1,21 @@
-//Definicion de los temas de estilo de lapp
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  //constante de color primario
-  static const primaryColor = Color.fromARGB(255, 1, 79, 134); 
-  //Constante de color secunadrio
-  static const secondaryColor = Color.fromARGB(255, 0, 100, 180); 
-  //Constante de color terciario
-  static const tertiaryColor = Color.fromARGB(255, 0, 200, 100); 
-  //Constante de color cuarteario
-  static const quaternaryColor = Color.fromARGB(255, 0, 120, 60); 
-  //Constante de color de fondo
-  static const backColor = Color.fromARGB(255, 220, 240, 255); 
-  
-  //constante de temas
+  // Constantes de colores
+  static const Color primaryColor = Color.fromARGB(255, 1, 79, 134);
+  static const Color secondaryColor = Color.fromARGB(255, 0, 100, 180);
+  static const Color tertiaryColor = Color.fromARGB(255, 0, 200, 100);
+  static const Color quaternaryColor = Color.fromARGB(255, 0, 120, 60);
+  static const Color backColor = Color.fromARGB(255, 220, 240, 255);
+
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     scaffoldBackgroundColor: backColor,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       color: primaryColor,
-      titleTextStyle: GoogleFonts.bebasNeue(
-        color: const Color.fromARGB(255, 0, 0, 0),
+      titleTextStyle: TextStyle(
+        fontFamily: 'Roboto',
+        color: Color.fromARGB(255, 0, 0, 0),
         fontSize: 25.8,
         fontWeight: FontWeight.bold,
       ),
@@ -31,40 +26,41 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
-            const Color.fromARGB(255, 255, 255, 255),
-          ),
-          foregroundColor: WidgetStateProperty.all(
-            const Color.fromARGB(255, 0, 0, 0),
-          ),
-          textStyle: WidgetStateProperty.all(GoogleFonts.pacifico(
-            fontSize: 25.0,
-          ))),
+        backgroundColor: WidgetStateProperty.resolveWith((states) => const Color.fromARGB(255, 255, 255, 255)),
+        foregroundColor: WidgetStateProperty.resolveWith((states) => const Color.fromARGB(255, 0, 0, 0)),
+        textStyle: WidgetStateProperty.resolveWith((states) => const TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 25.0,
+        )),
+      ),
     ),
-    textTheme: TextTheme(
-      //titulos muy grandes
-      headlineLarge: GoogleFonts.bebasNeue(
+    textTheme: const TextTheme(
+      headlineLarge: TextStyle(
+        fontFamily: 'Roboto',
         color: primaryColor,
         fontSize: 50.5,
         fontWeight: FontWeight.w500,
         decorationStyle: TextDecorationStyle.wavy,
         decorationThickness: 1.0,
       ),
-      headlineMedium: GoogleFonts.montserrat(
+      headlineMedium: TextStyle(
+        fontFamily: 'Roboto',
         color: secondaryColor,
         fontSize: 21.5,
         fontWeight: FontWeight.bold,
       ),
-      //estilo para texto muy pequeño
-      bodySmall: GoogleFonts.bebasNeue(
-        color: secondaryColor, 
-        fontSize: 16.0
-        ),
-      bodyMedium: GoogleFonts.bebasNeue(
+      bodySmall: TextStyle(
+        fontFamily: 'Montserrat',
+        color: secondaryColor,
+        fontSize: 16.0,
+      ),
+      bodyMedium: TextStyle(
+        fontFamily: 'Montserrat',
         color: quaternaryColor,
         fontSize: 20.0,
       ),
-      bodyLarge: GoogleFonts.bebasNeue(
+      bodyLarge: TextStyle(
+        fontFamily: 'Montserrat',
         color: primaryColor,
         fontSize: 24.0,
       ),
