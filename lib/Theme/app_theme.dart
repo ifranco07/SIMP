@@ -26,9 +26,9 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith((states) => const Color.fromARGB(255, 255, 255, 255)),
-        foregroundColor: WidgetStateProperty.resolveWith((states) => const Color.fromARGB(255, 0, 0, 0)),
-        textStyle: WidgetStateProperty.resolveWith((states) => const TextStyle(
+        backgroundColor: MaterialStateProperty.resolveWith((states) => const Color.fromARGB(255, 255, 255, 255)),
+        foregroundColor: MaterialStateProperty.resolveWith((states) => const Color.fromARGB(255, 0, 0, 0)),
+        textStyle: MaterialStateProperty.resolveWith((states) => const TextStyle(
           fontFamily: 'Roboto',
           fontSize: 25.0,
         )),

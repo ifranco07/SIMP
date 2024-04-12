@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "simp" "\0"
+            VALUE "FileDescription", "simp3" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "simp" "\0"
+            VALUE "InternalName", "simp3" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "simp.exe" "\0"
-            VALUE "ProductName", "simp" "\0"
+            VALUE "OriginalFilename", "simp3.exe" "\0"
+            VALUE "ProductName", "simp3" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
