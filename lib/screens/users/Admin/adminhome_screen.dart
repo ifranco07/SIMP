@@ -5,9 +5,9 @@ import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
 class AdminHomeScreen extends StatelessWidget {
-  final String adminName; 
+  final String adminName;
 
-  const AdminHomeScreen({super.key, required this.adminName});
+  const AdminHomeScreen({Key? key, required this.adminName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class AdminHomeScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
-          flexibleSpace: Container( 
+          flexibleSpace: Container(
             padding: const EdgeInsets.only(top: 20.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -29,16 +29,6 @@ class AdminHomeScreen extends StatelessWidget {
                   Colors.transparent,
                   Colors.black.withOpacity(0.001),
                 ],
-              ),
-            ),
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'lib/assets/images/Logo.png',
-                fit: BoxFit.contain,
-                height: 150,
-                width: 120,
               ),
             ),
           ),
@@ -54,7 +44,7 @@ class AdminHomeScreen extends StatelessWidget {
                     // Implementa la lógica para abrir la pantalla de cuentas
                     break;
                   case 'Logout':
-                    Navigator.popUntil(context, (route) => route.isFirst); 
+                    Navigator.popUntil(context, (route) => route.isFirst);
                     break;
                 }
               },
@@ -86,7 +76,7 @@ class AdminHomeScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
-            alignment: Alignment.center, // Alinear la imagen al centro vertical y horizontalmente
+            alignment: Alignment.center,
           ),
           // Contenido sobre la imagen de fondo
           Center(
@@ -94,26 +84,29 @@ class AdminHomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Bienvenido $adminName', // Mostrar el nombre del administrador
-                  style: AppTheme.lightTheme.textTheme.headlineLarge,
+                  'Bienvenido $adminName',
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(// Hace transparente la barra de navegación
+      bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline, color: Colors.black), // Cambia el color del icono
+            icon: Icon(Icons.people_outline),
             label: 'Usuarios',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.pool_sharp, color: Colors.black), // Cambia el color del icono
+            icon: Icon(Icons.pool_sharp),
             label: 'Piscinas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_outlined, color: Colors.black), // Cambia el color del icono
+            icon: Icon(Icons.receipt_outlined),
             label: 'Reportes',
           ),
         ],
@@ -124,19 +117,27 @@ class AdminHomeScreen extends StatelessWidget {
             case 0:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ViewsUsersScreen(userList: [],)),
+                MaterialPageRoute(
+                  builder: (context) => const ViewsUsersScreen(
+                    userList: [],
+                  ),
+                ),
               );
               break;
             case 1:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ViewPiscinasScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const ViewPiscinasScreen(),
+                ),
               );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ViewsDataScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const ViewsDataScreen(),
+                ),
               );
               break;
           }
