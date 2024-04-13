@@ -206,8 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const CustomerHomeScreen(
-          clienteName: '',
+        builder: (context) => const AdminHomeScreen(
+          adminName: '',
         ),
       ),
     );

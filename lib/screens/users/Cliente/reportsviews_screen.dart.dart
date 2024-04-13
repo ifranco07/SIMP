@@ -59,7 +59,8 @@ class ViewsreportsScreen extends StatelessWidget {
           ),
         ),
         centerTitle: true, // Centrar el texto del AppBar
-        backgroundColor: Colors.white, // Fondo blanco del AppBar
+        backgroundColor: const Color.fromARGB(
+            255, 248, 248, 248), // Cambiar el color de fondo del AppBar a rojo
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20),
@@ -67,6 +68,8 @@ class ViewsreportsScreen extends StatelessWidget {
           ),
         ),
       ),
+      backgroundColor: Color.fromARGB(
+          255, 134, 219, 240), // Cambiar el color de fondo del Scaffold a rojo
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -107,21 +110,28 @@ class ViewsreportsScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       Container(
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(0,
+                                  3), // Cambiar el desplazamiento de la sombra si es necesario
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(8.0),
+                          color: Colors
+                              .white, // Cambiar el color de fondo de la carta a blanco
                         ),
-                        // Envuelve el Container con SingleChildScrollView
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: reportes
-                                .map((reporte) => ReportCard(
-                                      key: ValueKey(reporte['title']),
-                                      title: reporte['title'] ?? '',
-                                      date: reporte['date'] ?? '',
-                                      time: reporte['time'] ?? '',
-                                    ))
-                                .toList(),
-                          ),
+                        child: Column(
+                          children: reportes
+                              .map((reporte) => ReportCard(
+                                    key: ValueKey(reporte['title']),
+                                    title: reporte['title'] ?? '',
+                                    date: reporte['date'] ?? '',
+                                    time: reporte['time'] ?? '',
+                                  ))
+                              .toList(),
                         ),
                       ),
                       const SizedBox(height: 16),

@@ -9,28 +9,26 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.001),
-                ],
-              ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.transparent,
+                Colors.transparent,
+              ],
             ),
           ),
         ),
       ),
       body: Stack(
         children: [
-          Positioned.fill(
+          Container(
+            color: Colors.white, // Color de fondo blanco
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,18 +37,13 @@ class HomeScreen extends StatelessWidget {
                   flex: 2,
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: const AssetImage('lib/assets/images/POOL.jpg'),
+                        image: AssetImage('lib/assets/images/POOL.jpg'),
                         fit: BoxFit.cover,
                         alignment: Alignment.center,
-                        colorFilter: ColorFilter.mode(
-                          const Color.fromARGB(255, 70, 200, 243)
-                              .withOpacity(0.25),
-                          BlendMode.darken,
-                        ),
                       ),
-                      borderRadius: const BorderRadius.only(
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(40),
                         bottomRight: Radius.circular(40),
                       ),

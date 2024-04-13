@@ -1,174 +1,172 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Importa las fuentes de Google Fonts
-import 'package:simp/Theme/app_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simp/screens/users/Admin/viewsreports_screen.dart';
 import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
+import 'package:simp/screens/users/Cliente/datapool_screen.dart';
+import 'package:simp/screens/users/Cliente/reportsviews_screen.dart.dart';
 
-class AdminHomeScreen extends StatelessWidget {
+class AdminHomeScreen extends StatefulWidget {
   final String adminName;
 
   const AdminHomeScreen({Key? key, required this.adminName}) : super(key: key);
 
   @override
+  _AdminHomeScreenState createState() => _AdminHomeScreenState();
+}
+
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  int _selectedIndex = 0;
+
+  final List<IconData> _navIcons = [
+    Icons.people_outline,
+    Icons.pool_sharp,
+    Icons.receipt_outlined,
+    Icons.account_circle, // Icono para usuarios
+    Icons.logout, // Icono para cerrar sesión
+  ];
+
+  final List<String> _navTitle = [
+    "Usuarios",
+    "Piscinas",
+    "Reportes",
+    "Usuarios", // Título para usuarios
+    "Logout", // Título para cerrar sesión
+  ];
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          flexibleSpace: Container(
-            padding: const EdgeInsets.only(top: 20.0),
+      body: Stack(
+        children: [
+          // Aquí va la imagen
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.001),
-                ],
+              image: DecorationImage(
+                image: AssetImage('lib/assets/images/POOL.jpg'),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          actions: [
-            PopupMenuButton<String>(
-              itemBuilder: (BuildContext context) {
-                return <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'Perfil',
-                    child: Text(
-                      'Perfil',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 55, 140, 210),
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.patrickHandSc().fontFamily,
-                        fontSize: 19.0,
-                      ),
-                    ),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ajustes',
-                    child: Text(
-                      'Ajustes',
-                      style: TextStyle(
-                        color: const Color.fromARGB(255, 55, 140, 210),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 19.0,
-                      ),
-                    ),
-                  ),
-                  PopupMenuItem<String>(
-                    value: 'Logout',
-                    child: Container(
-                      child: Text(
-                        'Logout',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 55, 140, 210),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.patrickHandSc().fontFamily,
-                          fontSize: 16.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ];
-              },
-              onSelected: (String choice) {
-                // Implementa la lógica para manejar la selección de las opciones del menú
-                switch (choice) {
-                  case 'Perfil':
-                    // Implementa la lógica para abrir la pantalla de perfil
-                    break;
-                  case 'Ajustes':
-                    // Implementa la lógica para abrir la pantalla de cuentas
-                    break;
-                  case 'Logout':
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                    break;
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Stack(
-        children: [
-          // Imagen de fondo
-          Image.asset(
-            'lib/assets/images/POOL2.jpg', // Ruta de la imagen de fondo
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-          ),
-          // Contenido sobre la imagen de fondo
-          Center(
+
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 20,
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(height: 40),
                 Text(
-                  'Bienvenido $adminName',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  '¡Bienvenido ${widget.adminName}!',
+                  style: GoogleFonts.bungee(
+                    textStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 44,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
-            label: 'Usuarios',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pool_sharp),
-            label: 'Piscinas',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_outlined),
-            label: 'Reportes',
+
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _buildNavBar(),
           ),
         ],
-        selectedItemColor: AppTheme.primaryColor,
-        onTap: (int index) {
-          // Manejar la navegación aquí según el índice seleccionado
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ViewsUsersScreen(
-                    userList: [],
-                  ),
-                ),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ViewPiscinasScreen(),
-                ),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ViewsDataScreen(),
-                ),
-              );
-              break;
-          }
-        },
       ),
     );
+  }
+
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(
+          _navIcons.length,
+          (index) => GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedIndex = index;
+              });
+              _onItemTapped(index);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _navIcons[index],
+                  color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                  size: 28,
+                ),
+                Text(
+                  _navTitle[index],
+                  style: TextStyle(
+                    color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewsUsersScreen(userList: []),
+          ),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ViewPiscinasScreen(),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ViewsreportsScreen(),
+          ),
+        );
+        break;
+      case 3:
+        // Navegar a la pantalla de usuarios (aquí puedes implementar la navegación según tus necesidades)
+        break;
+      case 4:
+        // Cerrar sesión (aquí puedes implementar la lógica para cerrar sesión)
+        break;
+    }
   }
 }

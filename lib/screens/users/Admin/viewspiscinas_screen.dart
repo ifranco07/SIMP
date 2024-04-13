@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ViewPiscinasScreen extends StatelessWidget {
-  const ViewPiscinasScreen({super.key});
+  const ViewPiscinasScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +15,31 @@ class ViewPiscinasScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Piscinas'),
+        title: const Text(
+          'Piscinas',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // Número de columnas en la cuadrícula
-            crossAxisSpacing: 16.0, // Espacio horizontal entre los elementos de la cuadrícula
-            mainAxisSpacing: 16.0, // Espacio vertical entre los elementos de la cuadrícula
-            childAspectRatio: 2, // Relación de aspecto de cada elemento (ancho / alto)
+            crossAxisSpacing:
+                16.0, // Espacio horizontal entre los elementos de la cuadrícula
+            mainAxisSpacing:
+                16.0, // Espacio vertical entre los elementos de la cuadrícula
+            childAspectRatio:
+                2, // Relación de aspecto de cada elemento (ancho / alto)
           ),
           itemCount: piscinas.length,
           itemBuilder: (context, index) {
@@ -44,6 +59,75 @@ class ViewPiscinasScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+      bottomNavigationBar: _buildNavBar(), // Agregar el bottomNavigationBar
+    );
+  }
+
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () {
+              // Agrega aquí la lógica para el botón correspondiente
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                  size: 28,
+                ),
+                Text(
+                  "Agregar",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              // Agrega aquí la lógica para el botón correspondiente
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.home,
+                  color: Colors.blue,
+                  size: 28,
+                ),
+                Text(
+                  "Inicio",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

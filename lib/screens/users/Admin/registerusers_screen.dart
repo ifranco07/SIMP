@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simp/Theme/app_theme.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
 class RegisterUsersScreen extends StatefulWidget {
-  const RegisterUsersScreen({super.key});
+  const RegisterUsersScreen({Key? key}) : super(key: key);
 
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();
@@ -20,193 +21,251 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Registro de Usuarios',
-          style: TextStyle(color: AppTheme.primaryColor),
+          style: GoogleFonts.lato(
+            textStyle: TextStyle(color: AppTheme.primaryColor),
+          ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 150),
-            _buildRoundedTextField(_nameController, 'Nombre'),
-            const SizedBox(height: 12),
-            _buildRoundedTextField(_emailController, 'Correo electrónico'),
-            const SizedBox(height: 12),
-            _buildRoundedDropdownButtonFormField(
-              ['Cliente'],
-              'Rol',
-            ),
-            const SizedBox(height: 12),
-            _buildRoundedPasswordField(
-              _obscurePassword,
-              () {
-                setState(() {
-                  _obscurePassword = !_obscurePassword;
-                });
-              },
-              _obscureConfirmPassword,
-              () {
-                setState(() {
-                  _obscureConfirmPassword = !_obscureConfirmPassword;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: ElevatedButton(
-                onPressed: () {
-                  final newUser = User(
-                    name: _nameController.text,
-                    email: _emailController.text,
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewsUsersScreen(
-                        userList: [newUser],
+      body: Center(
+        child: Card(
+          color: Colors.white.withOpacity(0.8),
+          elevation: 8,
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildTextField(_nameController, 'Nombre'),
+                SizedBox(height: 20),
+                _buildTextField(_emailController, 'Correo electrónico'),
+                SizedBox(height: 20),
+                _buildDropdownButtonFormField(
+                  ['Cliente'],
+                  'Rol',
+                ),
+                SizedBox(height: 20),
+                _buildPasswordField(
+                  _obscurePassword,
+                  () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                  _obscureConfirmPassword,
+                  () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
+                SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    final newUser = User(
+                      name: _nameController.text,
+                      email: _emailController.text,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewsUsersScreen(
+                          userList: [newUser],
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryColor,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    'Registrar',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppTheme.primaryColor,
+                  ),
                 ),
-                child: const Text('Registrar'),
-              ),
+              ],
             ),
-          ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: _buildNavBar(),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String labelText) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(
+          color: Colors.black,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: AppTheme.primaryColor),
         ),
       ),
     );
   }
 
-  Widget _buildRoundedTextField(TextEditingController controller, String labelText) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(
-            color: Colors.black,
-          ),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRoundedDropdownButtonFormField(List<String> items, String labelText) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: DropdownButtonFormField<String>(
-        value: _selectedUserRole,
-        onChanged: (newValue) {
-          setState(() {
-            _selectedUserRole = newValue;
-          });
-        },
-        items: items.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(
-              value,
-              style: const TextStyle(
-                color: Colors.black,
-              ),
+  Widget _buildDropdownButtonFormField(List<String> items, String labelText) {
+    return DropdownButtonFormField<String>(
+      value: _selectedUserRole,
+      onChanged: (newValue) {
+        setState(() {
+          _selectedUserRole = newValue;
+        });
+      },
+      items: items.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: TextStyle(
+              color: Colors.black,
             ),
-          );
-        }).toList(),
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(
-            color: Colors.black,
           ),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          ),
+        );
+      }).toList(),
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(
+          color: Colors.black,
         ),
-        selectedItemBuilder: (BuildContext context) {
-          return items.map<Widget>((String item) {
-            return Container(
-              color: Colors.white.withOpacity(0.7),
-              child: Text(
-                item,
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            );
-          }).toList();
-        },
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide(color: AppTheme.primaryColor),
+        ),
       ),
     );
   }
 
-  Widget _buildRoundedPasswordField(
+  Widget _buildPasswordField(
     bool obscurePassword,
     VoidCallback togglePasswordVisibility,
     bool obscureConfirmPassword,
     VoidCallback toggleConfirmPasswordVisibility,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Column(
-        children: [
-          TextFormField(
-            obscureText: obscurePassword,
-            decoration: InputDecoration(
-              labelText: 'Contraseña',
-              labelStyle: const TextStyle(
-                color: Colors.black,
-              ),
-              border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(obscurePassword ? Icons.visibility : Icons.visibility_off),
-                onPressed: togglePasswordVisibility,
-              ),
+    return Column(
+      children: [
+        TextFormField(
+          obscureText: obscurePassword,
+          decoration: InputDecoration(
+            labelText: 'Contraseña',
+            labelStyle: TextStyle(
+              color: Colors.black,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: AppTheme.primaryColor),
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                  obscurePassword ? Icons.visibility : Icons.visibility_off),
+              onPressed: togglePasswordVisibility,
             ),
           ),
-          const SizedBox(height: 12),
-          TextFormField(
-            obscureText: obscureConfirmPassword,
-            decoration: InputDecoration(
-              labelText: 'Confirmar Contraseña',
-              labelStyle: const TextStyle(
-                color: Colors.black,
-              ),
-              border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.all(Radius.circular(12.0)),
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(obscureConfirmPassword ? Icons.visibility : Icons.visibility_off),
-                onPressed: toggleConfirmPasswordVisibility,
-              ),
+        ),
+        SizedBox(height: 20),
+        TextFormField(
+          obscureText: obscureConfirmPassword,
+          decoration: InputDecoration(
+            labelText: 'Confirmar Contraseña',
+            labelStyle: TextStyle(
+              color: Colors.black,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide(color: AppTheme.primaryColor),
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(obscureConfirmPassword
+                  ? Icons.visibility
+                  : Icons.visibility_off),
+              onPressed: toggleConfirmPasswordVisibility,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.arrow_back,
+                  color: Colors.blue,
+                  size: 28,
+                ),
+                Text(
+                  "Regresar",
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
