@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:simp/screens/users/Admin/adminhome_screen.dart';
 
-class DataPoolScreen extends StatelessWidget {
+class DataPoolScreen extends StatefulWidget {
   const DataPoolScreen({Key? key}) : super(key: key);
+
+  @override
+  _DataPoolScreenState createState() => _DataPoolScreenState();
+}
+
+class _DataPoolScreenState extends State<DataPoolScreen> {
+  int _selectedIndex = 0;
+
+  final List<IconData> _navIcons = [
+    Icons.home,
+    Icons.wallet,
+    Icons.person,
+  ];
+
+  final List<String> _navTitle = [
+    "Home",
+    "Wallet",
+    "Account",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +43,21 @@ class DataPoolScreen extends StatelessWidget {
           mainAxisSpacing: 20.0,
           children: [
             _buildDataCard(
-              context,
               title: 'Nivel de Sólidos',
               data: '80%',
               color: Colors.blue,
             ),
             _buildDataCard(
-              context,
               title: 'pH',
               data: '7.2',
               color: Colors.green,
             ),
             _buildDataCard(
-              context,
               title: 'Temperatura del Agua',
               data: '28°C',
               color: Colors.orange,
             ),
             _buildDataCard(
-              context,
               title: 'Control de Luces',
               data: '',
               color: Colors.red,
@@ -52,7 +67,6 @@ class DataPoolScreen extends StatelessWidget {
               ),
             ),
             _buildDataCard(
-              context,
               title: '2 switch',
               data: '',
               color: Colors.red,
@@ -62,7 +76,6 @@ class DataPoolScreen extends StatelessWidget {
               ),
             ),
             _buildDataCard(
-              context,
               title: 'Luz Automatica',
               data: '',
               color: Colors.red,
@@ -74,37 +87,11 @@ class DataPoolScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-          color: Colors.white, // Color de fondo del BottomNavigationBar
-        ),
-        child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.black),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.exit_to_app,
-                  color: Colors.black), // Ícono de cerrar sesión
-              label: 'Cerrar Sesión',
-            ),
-          ],
-          selectedItemColor: Theme.of(context).primaryColor,
-          onTap: (int index) {
-            // Manejar la navegación aquí según el índice seleccionado
-          },
-        ),
-      ),
+      bottomNavigationBar: _buildNavBar(),
     );
   }
 
-  Widget _buildDataCard(
-    BuildContext context, {
+  Widget _buildDataCard({
     required String title,
     required String data,
     required Color color,
@@ -137,6 +124,54 @@ class DataPoolScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18),
               ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(
+          _navIcons.length,
+          (index) => GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _navIcons[index],
+                  color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                ),
+                Text(
+                  _navTitle[index],
+                  style: TextStyle(
+                    color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

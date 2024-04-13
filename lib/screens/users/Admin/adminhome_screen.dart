@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart'; // Importa las fuentes de Google Fonts
 import 'package:simp/Theme/app_theme.dart';
 import 'package:simp/screens/users/Admin/viewsreports_screen.dart';
 import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
@@ -34,6 +35,47 @@ class AdminHomeScreen extends StatelessWidget {
           ),
           actions: [
             PopupMenuButton<String>(
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'Perfil',
+                    child: Text(
+                      'Perfil',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 55, 140, 210),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.patrickHandSc().fontFamily,
+                        fontSize: 19.0,
+                      ),
+                    ),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'Ajustes',
+                    child: Text(
+                      'Ajustes',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 55, 140, 210),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19.0,
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Logout',
+                    child: Container(
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 55, 140, 210),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.patrickHandSc().fontFamily,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ];
+              },
               onSelected: (String choice) {
                 // Implementa la lógica para manejar la selección de las opciones del menú
                 switch (choice) {
@@ -47,22 +89,6 @@ class AdminHomeScreen extends StatelessWidget {
                     Navigator.popUntil(context, (route) => route.isFirst);
                     break;
                 }
-              },
-              itemBuilder: (BuildContext context) {
-                return <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Perfil',
-                    child: Text('Perfil'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Ajustes',
-                    child: Text('Ajustes'),
-                  ),
-                  const PopupMenuItem<String>(
-                    value: 'Logout',
-                    child: Text('Logout'),
-                  ),
-                ];
               },
             ),
           ],

@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Image.asset(
-            'lib/assets/images/textura-agua-piscina.jpg',
+            'lib/assets/images/fondopi.jpeg',
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -206,8 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const AdminHomeScreen(
-          adminName: '',
+        builder: (context) => const CustomerHomeScreen(
+          clienteName: '',
         ),
       ),
     );

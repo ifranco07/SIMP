@@ -3,22 +3,41 @@ import 'package:simp/Theme/app_theme.dart';
 import 'package:simp/screens/users/Cliente/datapool_screen.dart';
 import 'package:simp/screens/users/Cliente/reportsviews_screen.dart.dart';
 
-class CustomerHomeScreen extends StatelessWidget {
+class CustomerHomeScreen extends StatefulWidget {
   final String clienteName;
 
-  const CustomerHomeScreen({super.key, required this.clienteName});
+  const CustomerHomeScreen({Key? key, required this.clienteName})
+      : super(key: key);
+
+  @override
+  _CustomerHomeScreenState createState() => _CustomerHomeScreenState();
+}
+
+class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  int _selectedIndex = 0;
+
+  final List<IconData> _navIcons = [
+    Icons.document_scanner,
+    Icons.control_point,
+  ];
+
+  final List<String> _navTitle = [
+    "Reportes",
+    "Datos",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar:
+          true, // Hace que el contenido del Scaffold se extienda detrás de la barra de la AppBar
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           automaticallyImplyLeading: false,
-          flexibleSpace: Container( 
+          flexibleSpace: Container(
             padding: const EdgeInsets.only(top: 20.0),
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -28,16 +47,6 @@ class CustomerHomeScreen extends StatelessWidget {
                   Colors.transparent,
                   Colors.black.withOpacity(0.001),
                 ],
-              ),
-            ),
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'lib/assets/images/Logo.png',
-                fit: BoxFit.contain,
-                height: 150,
-                width: 120,
               ),
             ),
           ),
@@ -53,7 +62,7 @@ class CustomerHomeScreen extends StatelessWidget {
                     // Implementa la lógica para abrir la pantalla de cuentas
                     break;
                   case 'Logout':
-                    Navigator.popUntil(context, (route) => route.isFirst); 
+                    Navigator.popUntil(context, (route) => route.isFirst);
                     break;
                 }
               },
@@ -85,7 +94,8 @@ class CustomerHomeScreen extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             fit: BoxFit.cover,
-            alignment: Alignment.center, // Alinear la imagen al centro vertical y horizontalmente
+            alignment: Alignment
+                .center, // Alinear la imagen al centro vertical y horizontalmente
           ),
           // Contenido sobre la imagen de fondo
           Center(
@@ -93,7 +103,7 @@ class CustomerHomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Bienvenido $clienteName', // Mostrar el nombre del administrador
+                  'Bienvenido ${widget.clienteName}', // Mostrar el nombre del administrador
                   style: AppTheme.lightTheme.textTheme.headlineLarge,
                 ),
               ],
@@ -101,36 +111,74 @@ class CustomerHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(// Hace transparente la barra de navegación
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notes_sharp, color: Colors.black), // Cambia el color del icono
-            label: 'Reportes',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.data_saver_off, color: Colors.black), // Cambia el color del icono
-            label: 'Datos',
+      bottomNavigationBar: _buildNavBar(),
+    );
+  }
+
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
           ),
         ],
-        selectedItemColor: AppTheme.primaryColor,
-        onTap: (int index) {
-          // Manejar la navegación aquí según el índice seleccionado
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ViewsreportsScreen()),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DataPoolScreen()),
-              );
-              break;
-          }
-        },
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(
+          _navIcons.length,
+          (index) => GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedIndex = index;
+              });
+              _onItemTapped(index);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  _navIcons[index],
+                  color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                ),
+                Text(
+                  _navTitle[index],
+                  style: TextStyle(
+                    color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ViewsreportsScreen()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DataPoolScreen()),
+        );
+        break;
+      // Agrega casos adicionales aquí para cada ícono de navegación
+    }
   }
 }
