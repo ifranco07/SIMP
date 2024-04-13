@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simp/screens/users/Admin/adminhome_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DataPoolScreen extends StatefulWidget {
   const DataPoolScreen({Key? key}) : super(key: key);
@@ -13,25 +13,33 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
 
   final List<IconData> _navIcons = [
     Icons.home,
-    Icons.wallet,
-    Icons.person,
+    Icons.document_scanner,
   ];
 
   final List<String> _navTitle = [
     "Home",
-    "Wallet",
-    "Account",
+    "Reportes",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Datos de la Piscina'),
+        title: Text(
+          'Control de piscina',
+          style: GoogleFonts.bebasNeue(
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 29, // Tamaño de la letra
+            ),
+          ),
+        ),
+        centerTitle: true, // Centrar el texto del AppBar
+        backgroundColor: Colors.white, // Fondo blanco del AppBar
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20.0),
-            bottomRight: Radius.circular(20.0),
+            bottomLeft: Radius.circular(20),
+            bottomRight: Radius.circular(20),
           ),
         ),
       ),
@@ -46,21 +54,25 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
               title: 'Nivel de Sólidos',
               data: '80%',
               color: Colors.blue,
+              icon: Icons.opacity,
             ),
             _buildDataCard(
-              title: 'pH',
+              title: 'PH',
               data: '7.2',
               color: Colors.green,
+              icon: Icons.waves,
             ),
             _buildDataCard(
               title: 'Temperatura del Agua',
               data: '28°C',
               color: Colors.orange,
+              icon: Icons.thermostat,
             ),
             _buildDataCard(
-              title: 'Control de Luces',
+              title: 'Control de luz',
               data: '',
               color: Colors.red,
+              icon: Icons.lightbulb_outline,
               child: Switch(
                 value: true,
                 onChanged: (value) {},
@@ -70,6 +82,7 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
               title: '2 switch',
               data: '',
               color: Colors.red,
+              icon: Icons.lightbulb_outline,
               child: Switch(
                 value: false,
                 onChanged: (value) {},
@@ -79,6 +92,7 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
               title: 'Luz Automatica',
               data: '',
               color: Colors.red,
+              icon: Icons.lightbulb_outline,
               child: Switch(
                 value: false,
                 onChanged: (value) {},
@@ -95,6 +109,7 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
     required String title,
     required String data,
     required Color color,
+    required IconData icon,
     Widget? child,
   }) {
     return Card(
@@ -107,22 +122,25 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Icon(
+              icon,
+              size: 40,
+              color: color,
+            ),
+            SizedBox(height: 10),
             Text(
               title,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: color,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             if (child != null)
               child
             else
-              Text(
-                data,
-                style: TextStyle(fontSize: 18),
-              ),
+              Text(data, style: TextStyle(fontSize: 18, color: Colors.black)),
           ],
         ),
       ),

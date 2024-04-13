@@ -7,7 +7,7 @@ class AppTheme {
   static const Color secondaryColor = Color.fromARGB(255, 0, 100, 180);
   static const Color tertiaryColor = Color.fromARGB(255, 0, 200, 100);
   static const Color quaternaryColor = Color.fromARGB(255, 0, 120, 60);
-  static const Color backColor = Color.fromARGB(255, 220, 240, 255);
+  static const Color backColor = Color.fromARGB(0, 255, 255, 255);
 
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     scaffoldBackgroundColor: backColor,
@@ -26,12 +26,15 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.resolveWith((states) => const Color.fromARGB(255, 255, 255, 255)),
-        foregroundColor: MaterialStateProperty.resolveWith((states) => const Color.fromARGB(255, 0, 0, 0)),
-        textStyle: MaterialStateProperty.resolveWith((states) => const TextStyle(
-          fontFamily: 'Roboto',
-          fontSize: 25.0,
-        )),
+        backgroundColor: MaterialStateProperty.resolveWith(
+            (states) => const Color.fromARGB(255, 255, 255, 255)),
+        foregroundColor: MaterialStateProperty.resolveWith(
+            (states) => const Color.fromARGB(255, 0, 0, 0)),
+        textStyle:
+            MaterialStateProperty.resolveWith((states) => const TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 25.0,
+                )),
       ),
     ),
     textTheme: const TextTheme(
