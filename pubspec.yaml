@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.2.1
+  mailer: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -26,10 +27,10 @@ flutter:
     - lib/assets/images/POOL.jpg
     - lib/assets/images/POOL2.jpg
     - lib/assets/images/Piscina.jpg
-    - lib/assets/images/textura-agua-piscina.jpg
     - lib/assets/images/facebook.png
     - lib/assets/images/Google.png
     - lib/assets/images/Logo.png
+    - lib/assets/images/fondopi.jpeg
     - android/app/src/main/res/mipmap-hdpi/ic_launcher.png
     - android/app/src/main/res/mipmap-mdpi/ic_launcher.png
     - android/app/src/main/res/mipmap-xhdpi/ic_launcher.png

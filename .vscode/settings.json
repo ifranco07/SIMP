@@ -1,5 +1,19 @@
 {
     "cSpell.words": [
         "resetpassword"
-    ]
+    ],
+    "spellright.language": [
+        "en"
+    ],
+    "spellright.documentTypes": [
+        "markdown",
+        "latex",
+        "plaintext"
+    ],
+    "spellright.parserByClass": {
+        "code-text-binary": {
+            "parser": "plain"
+        }
+    },
+    "cmake.sourceDirectory": "C:/Users/i_fra/Developer/DMM/SIMP/windows"
 }

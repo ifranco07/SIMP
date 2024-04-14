@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
+
 
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
@@ -9,11 +14,6 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _securityCodeController = TextEditingController();
-
-  final bool _isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,39 +31,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               decoration: const InputDecoration(labelText: 'Correo Electrónico'),
             ),
             const SizedBox(height: 16),
-            if (_isAdmin)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Recibirás un correo electrónico con un código de seguridad para restablecer tu contraseña.',
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _securityCodeController,
-                    decoration: const InputDecoration(labelText: 'Código de Seguridad'),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _newPasswordController,
-                    decoration: const InputDecoration(labelText: 'Nueva Contraseña'),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    decoration: const InputDecoration(labelText: 'Confirmar Contraseña'),
-                    obscureText: true,
-                  ),
-                ],
-              )
-            else
-              // Text(
-              //   'Pide a tu administrador que te proporcione tu contraseña.',
-              //   style: TextStyle(color: Theme.of(context).primaryColor),
-              // ),
-            const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _resetPassword,
               child: const Text('Restablecer Contraseña'),
@@ -74,23 +41,70 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
 
-  void _resetPassword() {
-    if (_isAdmin) {
-      // Aquí puedes implementar la lógica para enviar el correo con el código de seguridad
-      // y para restablecer la contraseña del administrador
-    } else {
-      // Muestra una alerta para el cliente indicando que debe contactar al administrador
-      _showAlert(context);
-    }
-  }
+  void _resetPassword() async {
+  String email = _emailController.text;
 
-  void _showAlert(BuildContext context) {
+  // Verificar si el correo electrónico está registrado en la base de datos
+  try {
+    // Consultar la colección de usuarios en Firestore
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    // Si existe al menos un documento con este correo electrónico
+    if (querySnapshot.docs.isNotEmpty) {
+      // Enviar el correo con el código de seguridad
+      String securityCode = _generateSecurityCode();
+      await _sendEmail(email, securityCode);
+
+      // Mostrar un mensaje de éxito
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Correo Enviado'),
+            content: const Text('Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Si no se encuentra el correo electrónico en la base de datos
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text('No se encontró ningún usuario con este correo electrónico.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  } catch (e) {
+    // Manejar errores
+    print('Error al verificar el correo electrónico: $e');
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Restablecer Contraseña'),
-          content: const Text('Pide a tu administrador que te proporcione tu contraseña.'),
+          title: const Text('Error'),
+          content: const Text('Ocurrió un error al verificar el correo electrónico.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -103,13 +117,38 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       },
     );
   }
+}
+
+
+  String _generateSecurityCode() {
+    // Generar un código de seguridad aleatorio (aquí puedes implementar tu lógica personalizada)
+    return '123456';
+  }
+
+  Future<void> _sendEmail(String email, String securityCode) async {
+    String username = ''; // Tu dirección de correo electrónico
+    String password = ''; // Tu contraseña de correo electrónico
+
+    final smtpServer = gmail(username, password);
+
+    final message = Message()
+      ..from = Address(username, 'Your Name') // Remitente
+      ..recipients.add(email) // Destinatario
+      ..subject = 'Código de Seguridad para Restablecer Contraseña'
+      ..text = 'Tu código de seguridad para restablecer la contraseña es: $securityCode';
+
+    try {
+      await send(message, smtpServer);
+      print('Correo electrónico enviado correctamente');
+    } catch (e) {
+      print('Error al enviar el correo electrónico: $e');
+      throw Exception('Error al enviar el correo electrónico');
+    }
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
-    _securityCodeController.dispose();
     super.dispose();
   }
 }

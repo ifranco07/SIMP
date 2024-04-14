@@ -1,14 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:simp/screens/users/Admin/registerusers_screen.dart';
-import 'package:simp/Theme/app_theme.dart';
 import 'edituser_screen.dart'; // Importa la pantalla EditUserScreen
 
 class User {
   final String name;
   final String email;
 
-  User({required this.name, required this.email});
+  User({required this.name, required this.email, required String id});
 }
 
 class ViewsUsersScreen extends StatefulWidget {
@@ -26,15 +24,12 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
   @override
   void initState() {
     super.initState();
-    filteredUserList = List.from(widget.userList); // Copiar la lista para evitar mutabilidad
+    filteredUserList =
+        List.from(widget.userList); // Copiar la lista para evitar mutabilidad
   }
 
   @override
   Widget build(BuildContext context) {
-    // Copiar y ordenar la lista
-    List<User> sortedUserList = List.from(widget.userList);
-    sortedUserList.sort((a, b) => a.name.compareTo(b.name));
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -44,7 +39,10 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: UserSearchDelegate(widget.userList));
+              showSearch(
+                context: context,
+                delegate: UserSearchDelegate(widget.userList),
+              );
             },
             icon: const Icon(Icons.search, color: Colors.black),
           ),
@@ -57,7 +55,8 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
             crossAxisCount: 3, // Ajusta el número de usuarios por fila
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
-            childAspectRatio: 2 / 3, // Ajusta el ancho y el largo de cada usuario
+            childAspectRatio:
+                2 / 3, // Ajusta el ancho y el largo de cada usuario
           ),
           itemCount: filteredUserList.length,
           itemBuilder: (context, index) {
@@ -65,7 +64,9 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditUserScreen(user: filteredUserList[index])),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditUserScreen(user: filteredUserList[index])),
                 );
               },
               child: Card(
@@ -78,7 +79,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
                         filteredUserList[index].name,
                         style: Theme.of(context)
                             .textTheme
-                            .bodyMedium
+                            .bodyLarge
                             ?.copyWith(color: Colors.black),
                       ),
                       const SizedBox(height: 4),
@@ -86,7 +87,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
                         filteredUserList[index].email,
                         style: Theme.of(context)
                             .textTheme
-                            .bodySmall
+                            .bodyMedium
                             ?.copyWith(color: Colors.black),
                       ),
                     ],
@@ -125,10 +126,10 @@ class UserSearchDelegate extends SearchDelegate<String> {
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context).copyWith(
-      inputDecorationTheme: InputDecorationTheme(
-        hintStyle: const TextStyle(color: Colors.black),
+      inputDecorationTheme: const InputDecorationTheme(
+        hintStyle: TextStyle(color: Colors.black),
         border: InputBorder.none,
-        fillColor: Colors.grey[200],
+        fillColor: Colors.grey,
         filled: true,
       ),
     );

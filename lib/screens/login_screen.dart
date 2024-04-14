@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simp/Theme/app_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simp/screens/users/Admin/adminhome_screen.dart';
 import 'package:simp/screens/users/Cliente/customerhome_screen.dart';
-import 'users/Admin/adminhome_screen.dart';
-import 'resetpassword_screen.dart';
+import 'package:simp/screens/resetpassword_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,105 +37,104 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
           ),
-          alignment: Alignment.topLeft,
-          child: Image.asset(
-            'lib/assets/images/Logo.png',
-            fit: BoxFit.contain,
-            height: 100,
-          ),
         ),
       ),
-      body: Center(
-        child: Stack(
-          children: [
-            Image.asset(
-              'lib/assets/images/textura-agua-piscina.jpg',
-              fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 1.0,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 15.0),
-                      Container(
-                        padding: const EdgeInsets.all(18.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.01),
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildRoundedTextField(_emailController, 'Correo/Usuario'),
-                            const SizedBox(height: 16),
-                            _buildRoundedPasswordField(_passwordController, 'Contraseña'),
-                            ElevatedButton(
-                              onPressed: () {
-                                if (_validateInputs(context)) {
-                                  _loginUser(context);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppTheme.primaryColor,
-                                textStyle: const TextStyle(color: Colors.white),
-                              ),
-                              child: const Text('Iniciar Sesión'),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'O',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onTap: () {},
-                              child: Image.asset(
-                                'lib/assets/images/Google.png',
-                                width: 60,
-                                height: 60,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/ResetPasswordScreen');
-                              },
-                              child: const Text(
-                                '¿Olvidaste tu contraseña?',
-                                style: TextStyle(
-                                  color: AppTheme.primaryColor,
-                                  fontSize: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+      body: Stack(
+        children: [
+          Image.asset(
+            'lib/assets/images/fondopi.jpeg',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          Center(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Inicio de sesión',
+                    style: GoogleFonts.londrinaSolid(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  _buildRoundedTextField(
+                    _emailController,
+                    'Correo/Usuario',
+                  ),
+                  const SizedBox(height: 20),
+                  _buildRoundedPasswordField(
+                    _passwordController,
+                    'Contraseña',
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_validateInputs(context)) {
+                        _loginUser(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 86, 205, 235),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: Text(
+                      'Iniciar Sesión',
+                      style: GoogleFonts.alatsi(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'O',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Image.asset(
+                      'lib/assets/images/Google.png',
+                      width: 60,
+                      height: 60,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ResetPasswordScreen');
+                    },
+                    child: const Text(
+                      '¿Olvidaste tu contraseña?',
+                      style: TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -140,16 +142,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildRoundedTextField(TextEditingController controller, String labelText) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
+        color: Colors.blue.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
@@ -158,8 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildRoundedPasswordField(TextEditingController controller, String labelText) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
+        color: Colors.blue.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: TextFormField(
         controller: controller,
@@ -167,14 +168,14 @@ class _LoginScreenState extends State<LoginScreen> {
         keyboardType: TextInputType.visiblePassword,
         decoration: InputDecoration(
           labelText: labelText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
+           border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           suffixIcon: IconButton(
-            icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+            icon: Icon(
+              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            ),
             onPressed: () {
               setState(() {
-                // Cambia el estado de visibilidad de la contraseña
                 _isPasswordVisible = !_isPasswordVisible;
               });
             },
@@ -196,11 +197,41 @@ class _LoginScreenState extends State<LoginScreen> {
     return isValid;
   }
 
-  void _loginUser(BuildContext context) {
-    // Aquí irá la lógica para validar el inicio de sesión y redirigir al usuario según su rol.
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const CustomerHomeScreen(clienteName: '',)),
-    );
+  void _loginUser(BuildContext context) async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      final userId = userCredential.user?.uid;
+      if (userId != null) {
+        final userRoleSnapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        final userRole = userRoleSnapshot.data()?['role'];
+
+        if (userRole == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '')),
+          );
+        } else if (userRole == 'cliente') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const CustomerHomeScreen(clienteName: '')),
+          );
+        } else {
+          throw Exception('Rol de usuario no válido');
+        }
+      } else {
+        throw Exception('Error al autenticar al usuario');
+      }
+    } catch (error) {
+      print('Error de inicio de sesión: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error de inicio de sesión: $error'),
+        ),
+      );
+    }
   }
 }

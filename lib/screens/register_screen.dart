@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:simp/Theme/app_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simp/screens/Terms&Conditions.dart';
 import 'users/Admin/adminhome_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -38,18 +40,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
           ),
-          alignment: Alignment.topLeft,
-          child: Image.asset(
-            'lib/assets/images/Logo.png',
-            fit: BoxFit.contain,
-            height: 100,
-          ),
         ),
       ),
       body: Stack(
         children: [
           Image.asset(
-            'lib/assets/images/textura-agua-piscina.jpg',
+            'lib/assets/images/fondopi.jpeg',
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -64,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 15), 
+                      const SizedBox(height: 15),
                       _buildRoundedTextField(_firstNameController, 'Nombre'),
                       const SizedBox(height: 16),
                       _buildRoundedTextField(_lastNameController, 'Apellido'),
@@ -105,9 +101,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          // Implementar la lógica para mostrar los términos y condiciones
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const TermsAndConditionsScreen()),
+                          );
                         },
                         child: const Text(
                           'Ver Política de Términos y Condiciones',
@@ -122,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryColor,
+                          backgroundColor: Colors.blue,
                           textStyle: const TextStyle(color: Colors.white),
                         ),
                         child: const Text('Registrarse'),
@@ -164,7 +163,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: const TextStyle(
-            color: AppTheme.secondaryColor,
+            color: Colors.black,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
@@ -186,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: const TextStyle(
-            color: AppTheme.secondaryColor,
+            color: Colors.black,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16.0),
@@ -215,12 +214,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return isValid;
   }
 
-  void _registerUser(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '',)),
-    );
-    _showSuccessAlert('Su cuenta ha sido registrada con éxito');
+  void _registerUser(BuildContext context) async {
+    try {
+      // Registrar usuario en Firebase Authentication
+      final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailPhoneController.text,
+        password: _passwordController.text,
+      );
+
+      // Obtener el ID del usuario
+      final userId = userCredential.user?.uid;
+
+      // Crear un nuevo documento para el usuario en Firestore
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'name': '${_firstNameController.text} ${_lastNameController.text}',
+        'username': _usernameController.text,
+        'email': _emailPhoneController.text,
+        'role': 'admin', // Asignar el rol de administrador
+      });
+
+      // Redirigir al usuario a la pantalla de inicio de administrador
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '')),
+      );
+
+      _showSuccessAlert('Su cuenta ha sido registrada con éxito');
+    } catch (e) {
+      // Manejar errores de registro
+      _showErrorAlert('Error al registrar el usuario: $e');
+    }
   }
 
   void _showSuccessAlert(String message) {
