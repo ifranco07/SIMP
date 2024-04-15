@@ -1,14 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simp/Theme/app_theme.dart';
-import 'package:simp/screens/users/Admin/viewsusers_screen.dart' as admin; // Alias para el import de viewsusers_screen.dart
+import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
 class RegisterUsersScreen extends StatefulWidget {
-  final Function(admin.User)? onUserRegistered; // Usando el tipo de User desde el alias admin
-
-  const RegisterUsersScreen({super.key, this.onUserRegistered});
+  const RegisterUsersScreen({Key? key}) : super(key: key);
 
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();
@@ -18,9 +16,63 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? _selectedUserRole;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  Future<void> _registerUser() async {
+    try {
+      if (_passwordController.text != _confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Las contraseñas no coinciden'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return;
+      }
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+
+      // Guardar otros detalles del usuario en Firestore, por ejemplo el nombre
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'name': _nameController.text,
+        'email': _emailController.text,
+        'role': _selectedUserRole,
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Usuario registrado con éxito'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      _nameController.clear();
+      _emailController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+      setState(() {
+        _selectedUserRole = null;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al registrar el usuario: $error'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +134,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
                 ),
                 const SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: () {
-                    if (_validateInputs()) {
-                      _registerUser(context);
-                    }
-                  },
+                  onPressed: _registerUser,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -200,6 +248,7 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
         const SizedBox(height: 20),
         TextFormField(
           obscureText: obscureConfirmPassword,
+          controller: _confirmPasswordController,
           decoration: InputDecoration(
             labelText: 'Confirmar Contraseña',
             labelStyle: const TextStyle(
@@ -267,89 +316,6 @@ class _RegisterUsersScreenState extends State<RegisterUsersScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  // Método para validar los campos de entrada
-  bool _validateInputs() {
-    final isValid = _nameController.text.isNotEmpty &&
-        _emailController.text.isNotEmpty &&
-        _selectedUserRole != null &&
-        _passwordController.text.isNotEmpty;
-    if (!isValid) {
-      _showErrorAlert('Por favor, completa todos los campos correctamente');
-    }
-    return isValid;
-  }
-
-  // Método para mostrar un cuadro de diálogo de error
-  void _showErrorAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error de registro'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Método para registrar el usuario
-  void _registerUser(BuildContext context) async {
-    try {
-      // Crear un usuario en Firebase Authentication
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      // Agregar el usuario a Firestore
-      await FirebaseFirestore.instance.collection(_selectedUserRole == 'Administrador' ? 'Administrador' : 'Clientes').doc(userCredential.user!.uid).set({
-        'nombre': _nameController.text,
-        'email': _emailController.text,
-        'rol': _selectedUserRole,
-      });
-
-      // Mostrar mensaje de éxito
-      _showSuccessAlert('Su cuenta ha sido registrada con éxito');
-    } on FirebaseAuthException catch (e) {
-      print('Error al registrar el usuario en Firebase: ${e.message}');
-      // Mostrar mensaje de error si ocurre algún problema
-      _showErrorAlert('Ocurrió un error al registrar su cuenta: ${e.message}');
-    }
-  }
-
-  // Método para mostrar un cuadro de diálogo de éxito
-  void _showSuccessAlert(String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Registro exitoso'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // Regresar el nuevo usuario registrado a la pantalla anterior
-                if (widget.onUserRegistered != null) {
-                  widget.onUserRegistered!(admin.User(name: _nameController.text, email: _emailController.text, id: '')); // Usando el tipo User desde el alias admin
-                }
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

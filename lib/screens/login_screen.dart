@@ -196,42 +196,55 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return isValid;
   }
-
   void _loginUser(BuildContext context) async {
     try {
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      final userId = userCredential.user?.uid;
-      if (userId != null) {
-        final userRoleSnapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
-        final userRole = userRoleSnapshot.data()?['role'];
-
-        if (userRole == 'admin') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '')),
-          );
-        } else if (userRole == 'cliente') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const CustomerHomeScreen(clienteName: '')),
-          );
+      bool isEmail = _emailController.text.contains('@');
+      UserCredential userCredential;
+      if (isEmail) {
+        userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
         } else {
-          throw Exception('Rol de usuario no válido');
-        }
-      } else {
-        throw Exception('Error al autenticar al usuario');
+          final querySnapshot = await FirebaseFirestore.instance.collection('users').where('username', isEqualTo: _emailController.text.trim()).get();
+          if (querySnapshot.docs.isNotEmpty) {
+            final userDoc = querySnapshot.docs.first;
+            final email = userDoc.data()['email'];
+            userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email,
+              password: _passwordController.text.trim(),
+            );
+            }else {
+              throw Exception('No se encontró ningún usuario con ese nombre de usuario');
+            }
+          }
+          final userId = userCredential.user?.uid;
+          if(userId != null) {
+            final userRoleSnapshot = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+            final userRole = userRoleSnapshot.data()?['role'];
+            if (userRole == 'admin') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminHomeScreen(adminName: '')),
+              );
+            }else if (userRole == 'Cliente') {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const CustomerHomeScreen(clienteName: '')),
+              );
+            }else {
+              throw Exception('Rol de usuario no válido');
+            }
+          }else {
+            throw Exception('Error al autenticar al usuario');
+          }
+      }catch (error) {
+        print('Error de inicio de sesión: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error de inicio de sesión: $error'),
+          ),
+        );
       }
-    } catch (error) {
-      print('Error de inicio de sesión: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error de inicio de sesión: $error'),
-        ),
-      );
     }
-  }
 }

@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simp/screens/users/Admin/registerusers_screen.dart';
-import 'edituser_screen.dart'; // Importa la pantalla EditUserScreen
+import 'edituser_screen.dart'; 
 
 class User {
   final String name;
   final String email;
 
-  User({required this.name, required this.email, required String id});
+  User({required this.name, required this.email});
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'email': email,
+    };
+  }
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      name: map['name'],
+      email: map['email'],
+    );
+  }
 }
 
 class ViewsUsersScreen extends StatefulWidget {
@@ -17,21 +30,45 @@ class ViewsUsersScreen extends StatefulWidget {
   @override
   _ViewsUsersScreenState createState() => _ViewsUsersScreenState();
 }
-
 class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
-  List<User> filteredUserList = [];
+  late List<User> userList= [];
 
   @override
   void initState() {
     super.initState();
-    filteredUserList =
-        List.from(widget.userList); // Copiar la lista para evitar mutabilidad
+    _loadUsers();
+  }
+
+  Future<void> _loadUsers() async {
+    // Obtener la colección de usuarios desde Firestore
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'Cliente') 
+        .get();
+
+    
+    setState(() {
+      userList = querySnapshot.docs
+          .map((doc) => User.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        shape: const ContinuousRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40.0),
+            topRight: Radius.circular(40.0),
+            bottomLeft: Radius.circular(60.0), // Agrega este radio
+            bottomRight: Radius.circular(60.0), // Agrega este radio
+          ),
+        ),
         title: const Text(
           'Usuarios',
           style: TextStyle(color: Colors.black),
@@ -41,7 +78,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: UserSearchDelegate(widget.userList),
+                delegate: UserSearchDelegate(userList, context),
               );
             },
             icon: const Icon(Icons.search, color: Colors.black),
@@ -58,7 +95,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
             childAspectRatio:
                 2 / 3, // Ajusta el ancho y el largo de cada usuario
           ),
-          itemCount: filteredUserList.length,
+          itemCount: userList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () {
@@ -66,7 +103,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          EditUserScreen(user: filteredUserList[index])),
+                          EditUserScreen(user: userList[index])),
                 );
               },
               child: Card(
@@ -76,7 +113,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        filteredUserList[index].name,
+                        userList[index].name,
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge
@@ -84,7 +121,7 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        filteredUserList[index].email,
+                        userList[index].email,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
@@ -98,21 +135,58 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newUser = await Navigator.push<User?>(
-            context,
-            MaterialPageRoute(builder: (context) => const RegisterUsersScreen()),
-          );
+      bottomNavigationBar: _buildNavBar(),
+    );
+  }
 
-          if (newUser != null) {
-            setState(() {
-              widget.userList.add(newUser);
-              filteredUserList.add(newUser); // Actualizar la lista filtrada
-            });
-          }
-        },
-        child: const Icon(Icons.add),
+  Widget _buildNavBar() {
+    return Container(
+      height: 65,
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(20),
+            blurRadius: 20,
+            spreadRadius: 10,
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () {
+              // Navegar a la pantalla de registro de usuarios
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegisterUsersScreen(),
+                ),
+              );
+            },
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.add, 
+                  size: 28,
+                  color: Colors.blue,
+                ),
+                Text(
+                  "Agregar Usuario", 
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -120,12 +194,18 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
 
 class UserSearchDelegate extends SearchDelegate<String> {
   final List<User> userList;
+  final BuildContext context;
 
-  UserSearchDelegate(this.userList);
+  UserSearchDelegate(this.userList, this.context);
 
   @override
   ThemeData appBarTheme(BuildContext context) {
     return Theme.of(context).copyWith(
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       inputDecorationTheme: const InputDecorationTheme(
         hintStyle: TextStyle(color: Colors.black),
         border: InputBorder.none,
@@ -159,8 +239,9 @@ class UserSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final List<User> searchResults =
-        userList.where((user) => user.name.toLowerCase().contains(query.toLowerCase())).toList();
+    final List<User> searchResults = userList
+        .where((user) => user.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
     return ListView.builder(
       itemCount: searchResults.length,
       itemBuilder: (context, index) {
@@ -178,7 +259,8 @@ class UserSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final List<User> suggestionList = userList
-        .where((user) => user.name.toLowerCase().startsWith(query.toLowerCase()))
+        .where(
+            (user) => user.name.toLowerCase().startsWith(query.toLowerCase()))
         .toList();
     return ListView.builder(
       itemCount: suggestionList.length,

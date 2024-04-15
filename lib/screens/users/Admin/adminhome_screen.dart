@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:simp/screens/home_screen.dart';
 import 'package:simp/screens/users/Admin/viewsreports_screen.dart';
 import 'package:simp/screens/users/Admin/viewspiscinas_screen.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
@@ -30,7 +31,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     "Usuarios",
     "Piscinas",
     "Reportes",
-    "Logout", 
+    "Cuenta", // Título para usuarios
+    "Logout", // Título para cerrar sesión
   ];
 
   @override
@@ -39,6 +41,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
+          // Aquí va la imagen
           Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -139,7 +142,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ViewsUsersScreen(userList: []),
+            builder: (context) =>  const ViewsUsersScreen(userList: []),
           ),
         );
         break;
@@ -160,7 +163,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         );
         break;
       case 3:
-      // Cerrar sesión (aquí puedes implementar la lógica para cerrar sesión)
+        // Navegar a la pantalla de usuarios (aquí puedes implementar la navegación según tus necesidades)
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
         break;
     }
   }
