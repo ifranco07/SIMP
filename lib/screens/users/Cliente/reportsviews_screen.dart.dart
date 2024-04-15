@@ -1,52 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ViewsreportsScreen extends StatelessWidget {
-  const ViewsreportsScreen({super.key});
+class ViewsreportsScreen extends StatefulWidget {
+  const ViewsreportsScreen({Key? key}) : super(key: key);
+
+  @override
+  _ViewsreportsScreenState createState() => _ViewsreportsScreenState();
+}
+
+class _ViewsreportsScreenState extends State<ViewsreportsScreen> {
+  late CollectionReference reportesCollection;
+  Map<String, List<Map<String, String>>> piscinasReportes = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // Obtener referencia a la colección "reportes" en Firestore
+    reportesCollection = FirebaseFirestore.instance.collection('reportes');
+    // Cargar los reportes al iniciar la pantalla
+    _loadReportes();
+  }
+
+  void _loadReportes() async {
+    try {
+      // Consultar todos los documentos de la colección "reportes"
+      QuerySnapshot querySnapshot = await reportesCollection.get();
+
+      // Iterar sobre los documentos y actualizar el mapa de reportes
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          piscinasReportes[doc.id] = List<Map<String, String>>.from(doc['reportes']);
+        });
+      });
+    } catch (e) {
+      print('Error al cargar los reportes: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    Map<String, List<Map<String, String>>> piscinasReportes = {
-      'Piscina 1': [
-        {
-          'title': 'Reporte 1',
-          'date': '14 de noviembre de 2023',
-          'time': '10:00 AM'
-        },
-        {
-          'title': 'Reporte 2',
-          'date': '15 de noviembre de 2023',
-          'time': '11:00 AM'
-        },
-        {
-          'title': 'Reporte 3',
-          'date': '16 de noviembre de 2023',
-          'time': '12:00 PM'
-        },
-        // Agrega más reportes según sea necesario
-      ],
-      'Piscina 2': [
-        {
-          'title': 'Reporte 4',
-          'date': '17 de noviembre de 2023',
-          'time': '1:00 PM'
-        },
-        {
-          'title': 'Reporte 5',
-          'date': '18 de noviembre de 2023',
-          'time': '2:00 PM'
-        },
-        // Agrega más reportes según sea necesario
-      ],
-      'Piscina 3': [
-        {
-          'title': 'Reporte 6',
-          'date': '19 de noviembre de 2023',
-          'time': '3:00 PM'
-        },
-      ],
-    };
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -54,12 +47,12 @@ class ViewsreportsScreen extends StatelessWidget {
           style: GoogleFonts.bebasNeue(
             textStyle: const TextStyle(
               color: Colors.black,
-              fontSize: 29, // Tamaño de la letra
+              fontSize: 29,
             ),
           ),
         ),
-        centerTitle: true, // Centrar el texto del AppBar
-        backgroundColor: Colors.white, // Fondo blanco del AppBar
+        centerTitle: true,
+        backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(20),
@@ -110,7 +103,6 @@ class ViewsreportsScreen extends StatelessWidget {
                           border: Border.all(color: Colors.grey),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        // Envuelve el Container con SingleChildScrollView
                         child: SingleChildScrollView(
                           child: Column(
                             children: reportes
@@ -142,12 +134,12 @@ class ViewsreportsScreen extends StatelessWidget {
 
     final List<IconData> navIcons = [
       Icons.home,
-      Icons.play_arrow,
+      Icons.add, // Icono para agregar reporte
     ];
 
     final List<String> navTitle = [
       "Home",
-      "Control",
+      "Agregar", // Título para agregar reporte
     ];
 
     return Container(
@@ -172,7 +164,15 @@ class ViewsreportsScreen extends StatelessWidget {
           (index) => GestureDetector(
             onTap: () {
               // Aquí puedes manejar el cambio de página o cualquier otra acción según el índice seleccionado
-              selectedIndex = index;
+              if (index == 1) {
+                // Navegar a la pantalla para agregar reporte
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddReportsScreen()),
+                );
+              } else {
+                selectedIndex = index;
+              }
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -203,17 +203,31 @@ class ReportCard extends StatelessWidget {
   final String time;
 
   const ReportCard({
-    super.key,
+    required Key key,
     required this.title,
     required this.date,
     required this.time,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
       subtitle: Text('$date - $time'),
+    );
+  }
+}
+
+class AddReportsScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Agregar Reporte'),
+      ),
+      body: const Center(
+        child: Text('Pantalla para agregar reporte'),
+      ),
     );
   }
 }

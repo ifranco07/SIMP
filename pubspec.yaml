@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   google_fonts: ^6.2.1
   mailer: ^6.1.0
+  syncfusion_flutter_datepicker: ^25.1.39
 
 
 dev_dependencies:
