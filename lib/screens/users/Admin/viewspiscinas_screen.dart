@@ -177,7 +177,7 @@ class _ViewPiscinasScreenState extends State<ViewPiscinasScreen> {
 
   void _agregarPiscina() async {
     // Aquí va la lógica para agregar una nueva piscina manualmente
-    final TextEditingController _nombreController = TextEditingController();
+    final TextEditingController nombreController = TextEditingController();
 
     showDialog(
       context: context,
@@ -185,7 +185,7 @@ class _ViewPiscinasScreenState extends State<ViewPiscinasScreen> {
         return AlertDialog(
           title: const Text('Agregar Piscina'),
           content: TextField(
-            controller: _nombreController,
+            controller: nombreController,
             decoration: const InputDecoration(
               hintText: 'Nombre de la piscina',
             ),
@@ -200,7 +200,7 @@ class _ViewPiscinasScreenState extends State<ViewPiscinasScreen> {
             TextButton(
               onPressed: () async {
                 // Guardar la piscina en Firestore
-                await _guardarPiscina(_nombreController.text);
+                await _guardarPiscina(nombreController.text);
                 Navigator.of(context).pop();
               },
               child: const Text('Agregar'),
@@ -243,7 +243,7 @@ class _ViewPiscinasScreenState extends State<ViewPiscinasScreen> {
         });
         // Agregar la nueva piscina a la lista local
         setState(() {
-          this.piscinas = [Piscina(nombre: nombrePiscina)];
+          piscinas = [Piscina(nombre: nombrePiscina)];
         });
       }
     }

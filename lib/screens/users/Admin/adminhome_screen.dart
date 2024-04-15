@@ -23,15 +23,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     Icons.people_outline,
     Icons.pool_sharp,
     Icons.receipt_outlined,
-    Icons.account_circle, // Icono para usuarios
-    Icons.logout, // Icono para cerrar sesión
+    Icons.logout, 
   ];
 
   final List<String> _navTitle = [
     "Usuarios",
     "Piscinas",
     "Reportes",
-    "Cuenta", // Título para usuarios
     "Logout", // Título para cerrar sesión
   ];
 

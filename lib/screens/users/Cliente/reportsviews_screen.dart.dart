@@ -1,233 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViewsreportsScreen extends StatefulWidget {
-  const ViewsreportsScreen({Key? key}) : super(key: key);
+  const ViewsreportsScreen({super.key});
 
   @override
   _ViewsreportsScreenState createState() => _ViewsreportsScreenState();
 }
 
 class _ViewsreportsScreenState extends State<ViewsreportsScreen> {
-  late CollectionReference reportesCollection;
-  Map<String, List<Map<String, String>>> piscinasReportes = {};
+  late CollectionReference _reportesCollection;
 
   @override
   void initState() {
     super.initState();
-    // Obtener referencia a la colección "reportes" en Firestore
-    reportesCollection = FirebaseFirestore.instance.collection('reportes');
-    // Cargar los reportes al iniciar la pantalla
-    _loadReportes();
-  }
-
-  void _loadReportes() async {
-    try {
-      // Consultar todos los documentos de la colección "reportes"
-      QuerySnapshot querySnapshot = await reportesCollection.get();
-
-      // Iterar sobre los documentos y actualizar el mapa de reportes
-      querySnapshot.docs.forEach((doc) {
-        setState(() {
-          piscinasReportes[doc.id] = List<Map<String, String>>.from(doc['reportes']);
-        });
-      });
-    } catch (e) {
-      print('Error al cargar los reportes: $e');
-    }
+    _reportesCollection = FirebaseFirestore.instance.collection('reportes');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Reportes por Piscina',
-          style: GoogleFonts.bebasNeue(
-            textStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 29,
-            ),
+          style: TextStyle(
+            fontSize: 29,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          ),
-        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Resumen de Reportes',
-              style: GoogleFonts.bebasNeue(
-                textStyle: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: piscinasReportes.length,
-                itemBuilder: (context, index) {
-                  String piscina = piscinasReportes.keys.elementAt(index);
-                  List<Map<String, String>> reportes =
-                      piscinasReportes[piscina] ?? [];
+      body: FutureBuilder<QuerySnapshot>(
+        future: _reportesCollection.get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$piscina:',
-                        style: GoogleFonts.bebasNeue(
-                          textStyle: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: reportes
-                                .map((reporte) => ReportCard(
-                                      key: ValueKey(reporte['title']),
-                                      title: reporte['title'] ?? '',
-                                      date: reporte['date'] ?? '',
-                                      time: reporte['time'] ?? '',
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: _buildNavBar(),
-    );
-  }
+          Map<String, List<Map<String, dynamic>>> piscinasReportes = {};
+          snapshot.data?.docs.forEach((doc) {
+            piscinasReportes[doc.id] = List<Map<String, dynamic>>.from(doc['reportes']);
+          });
 
-  Widget _buildNavBar() {
-    int selectedIndex = 0;
+          return ListView.builder(
+            itemCount: piscinasReportes.length,
+            itemBuilder: (context, index) {
+              String piscina = piscinasReportes.keys.elementAt(index);
+              List<Map<String, dynamic>> reportes = piscinasReportes[piscina] ?? [];
 
-    final List<IconData> navIcons = [
-      Icons.home,
-      Icons.add, // Icono para agregar reporte
-    ];
-
-    final List<String> navTitle = [
-      "Home",
-      "Agregar", // Título para agregar reporte
-    ];
-
-    return Container(
-      height: 65,
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(20),
-            blurRadius: 20,
-            spreadRadius: 10,
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: List.generate(
-          navIcons.length,
-          (index) => GestureDetector(
-            onTap: () {
-              // Aquí puedes manejar el cambio de página o cualquier otra acción según el índice seleccionado
-              if (index == 1) {
-                // Navegar a la pantalla para agregar reporte
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddReportsScreen()),
-                );
-              } else {
-                selectedIndex = index;
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  navIcons[index],
-                  color: selectedIndex == index ? Colors.blue : Colors.grey,
-                ),
-                Text(
-                  navTitle[index],
-                  style: TextStyle(
-                    color: selectedIndex == index ? Colors.blue : Colors.grey,
-                    fontSize: 12,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$piscina:',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                  const SizedBox(height: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: reportes.length,
+                      itemBuilder: (context, index) {
+                        final reporte = reportes[index];
+                        return ListTile(
+                          title: Text(reporte['title'] ?? ''),
+                          subtitle: Text('${DateFormat('yyyy-MM-dd hh:mm').format(reporte['date'].toDate())}'),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _eliminarReporte(docId: piscina, reporteId: reporte['id']);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
-}
 
-class ReportCard extends StatelessWidget {
-  final String title;
-  final String date;
-  final String time;
-
-  const ReportCard({
-    required Key key,
-    required this.title,
-    required this.date,
-    required this.time,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text('$date - $time'),
-    );
-  }
-}
-
-class AddReportsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Agregar Reporte'),
-      ),
-      body: const Center(
-        child: Text('Pantalla para agregar reporte'),
-      ),
-    );
+  Future<void> _eliminarReporte({required String docId, required String reporteId}) async {
+    try {
+      await _reportesCollection.doc(docId).update({
+        'reportes': FieldValue.arrayRemove([reporteId]),
+      });
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reporte eliminado')));
+    } catch (e) {
+      print('Error al eliminar el reporte: $e');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error al eliminar el reporte')));
+    }
   }
 }

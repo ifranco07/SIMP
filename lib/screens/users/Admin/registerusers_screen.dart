@@ -6,7 +6,7 @@ import 'package:simp/Theme/app_theme.dart';
 import 'package:simp/screens/users/Admin/viewsusers_screen.dart';
 
 class RegisterUsersScreen extends StatefulWidget {
-  const RegisterUsersScreen({Key? key}) : super(key: key);
+  const RegisterUsersScreen({super.key});
 
   @override
   _RegisterUsersScreenState createState() => _RegisterUsersScreenState();

@@ -104,49 +104,55 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
               color: Colors.blue,
               icon: Icons.opacity,
             ),
-            _buildDataCard(
-              title: 'Control de luz manual',
-              data: _manualLightControl ? 'Encendido' : 'Apagado',
-              color: Colors.red,
-              icon: Icons.lightbulb_outline,
-              child: Switch(
-                value: _manualLightControl,
-                onChanged: (value) {
-                  setState(() {
-                    _manualLightControl = value;
-                    _databaseReference.update({'manual_light_control': value});
-                  });
-                },
+            SingleChildScrollView(
+              child: _buildDataCard(
+                title: 'Control de luz manual',
+                data: _manualLightControl ? 'Encendido' : 'Apagado',
+                color: Colors.red,
+                icon: Icons.lightbulb_outline,
+                child: Switch(
+                  value: _manualLightControl,
+                  onChanged: (value) {
+                    setState(() {
+                      _manualLightControl = value;
+                      _databaseReference.update({'manual_light_control': value});
+                    });
+                  },
+                ),
               ),
             ),
-            _buildDataCard(
-              title: 'Control del switch 2 manual',
-              data: _manualSwitch2 ? 'Encendido' : 'Apagado',
-              color: Colors.red,
-              icon: Icons.lightbulb_outline,
-              child: Switch(
-                value: _manualSwitch2,
-                onChanged: (value) {
-                  setState(() {
-                    _manualSwitch2 = value;
-                    _databaseReference.update({'manual_switch_2': value});
-                  });
-                },
+            SingleChildScrollView(
+              child: _buildDataCard(
+                title: 'Control del switch 2 manual',
+                data: _manualSwitch2 ? 'Encendido' : 'Apagado',
+                color: Colors.red,
+                icon: Icons.lightbulb_outline,
+                child: Switch(
+                  value: _manualSwitch2,
+                  onChanged: (value) {
+                    setState(() {
+                      _manualSwitch2 = value;
+                      _databaseReference.update({'manual_switch_2': value});
+                    });
+                  },
+                ),
               ),
             ),
-            _buildDataCard(
-              title: 'Control de luz automático',
-              data: _automaticLightControl ? 'Encendido' : 'Apagado',
-              color: Colors.red,
-              icon: Icons.lightbulb_outline,
-              child: Switch(
-                value: _automaticLightControl,
-                onChanged: (value) {
-                  setState(() {
-                    _automaticLightControl = value;
-                    _databaseReference.update({'automatic_light_control': value});
-                  });
-                },
+            SingleChildScrollView(
+              child: _buildDataCard(
+                title: 'Control de luz automático',
+                data: _automaticLightControl ? 'Encendido' : 'Apagado',
+                color: Colors.red,
+                icon: Icons.lightbulb_outline,
+                child: Switch(
+                  value: _automaticLightControl,
+                  onChanged: (value) {
+                    setState(() {
+                      _automaticLightControl = value;
+                      _databaseReference.update({'automatic_light_control': value});
+                    });
+                  },
+                ),
               ),
             ),
           ],
@@ -178,7 +184,7 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
               size: 40,
               color: color,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
               style: TextStyle(
@@ -187,11 +193,11 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
                 color: color,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (child != null)
               child
             else
-              Text(data, style: TextStyle(fontSize: 18, color: Colors.black)),
+              Text(data, style: const TextStyle(fontSize: 18, color: Colors.black)),
           ],
         ),
       ),
@@ -231,11 +237,14 @@ class _DataPoolScreenState extends State<DataPoolScreen> {
                   _navIcons[index],
                   color: _selectedIndex == index ? Colors.blue : Colors.grey,
                 ),
-                Text(
-                  _navTitle[index],
-                  style: TextStyle(
-                    color: _selectedIndex == index ? Colors.blue : Colors.grey,
-                    fontSize: 12,
+                Flexible(
+                  child: Text(
+                    _navTitle[index],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: _selectedIndex == index ? Colors.blue : Colors.grey,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],

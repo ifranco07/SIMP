@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simp/screens/users/Admin/registerusers_screen.dart';
-import 'edituser_screen.dart'; 
 
 class User {
   final String name;
@@ -92,20 +91,11 @@ class _ViewsUsersScreenState extends State<ViewsUsersScreen> {
             crossAxisCount: 3, // Ajusta el número de usuarios por fila
             crossAxisSpacing: 8.0,
             mainAxisSpacing: 8.0,
-            childAspectRatio:
-                2 / 3, // Ajusta el ancho y el largo de cada usuario
+            childAspectRatio:2 / 3, // Ajusta el ancho y el largo de cada usuario
           ),
           itemCount: userList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          EditUserScreen(user: userList[index])),
-                );
-              },
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

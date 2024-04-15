@@ -8,6 +8,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -37,7 +39,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _saveReport(BuildContext context) async {
     try {
       await _reportesCollection.add({
-        'date': _selectedDate,
+        'fecha': Timestamp.fromDate(_selectedDate),
+        // Aquí podrías agregar más campos si los necesitas
       });
       showDialog(
         context: context,

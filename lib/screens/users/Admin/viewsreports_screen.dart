@@ -1,67 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:simp/screens/users/Cliente/reportsviews_screen.dart.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ViewsDataScreen extends StatelessWidget {
-  const ViewsDataScreen({super.key});
+  const ViewsDataScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Ejemplo de mapa que relaciona piscinas con reportes de limpieza
-    Map<String, List<Map<String, String>>> piscinasReportes = {
-      'Piscina 1': [
-        {'title': 'Reporte 1', 'date': '14 de noviembre de 2023', 'time': '10:00 AM'},
-        {'title': 'Reporte 2', 'date': '15 de noviembre de 2023', 'time': '11:00 AM'},
-        {'title': 'Reporte 3', 'date': '16 de noviembre de 2023', 'time': '12:00 PM'},
-      ],
-      'Piscina 2': [
-        {'title': 'Reporte 4', 'date': '17 de noviembre de 2023', 'time': '1:00 PM'},
-        {'title': 'Reporte 5', 'date': '18 de noviembre de 2023', 'time': '2:00 PM'},
-      ],
-      'Piscina 3': [
-        {'title': 'Reporte 6', 'date': '19 de noviembre de 2023', 'time': '3:00 PM'},
-      ],
-      // Agrega más piscinas y sus reportes según sea necesario
-    };
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reportes por Piscina'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: piscinasReportes.length,
-          itemBuilder: (context, index) {
-            String piscina = piscinasReportes.keys.elementAt(index);
-            List<Map<String, String>> reportes = piscinasReportes[piscina] ?? [];
+      body: FutureBuilder<QuerySnapshot>(
+        future: FirebaseFirestore.instance.collection('reportes').get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$piscina:',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 8),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: reportes.length,
-                  itemBuilder: (context, index) {
-                    Map<String, String> reporte = reportes[index];
-                    return ReportCard(
-                      key: ValueKey(index), // Agrega un ValueKey para evitar errores de duplicación de claves
-                      title: reporte['title'] ?? '', // Maneja valores nulos proporcionando un valor predeterminado
-                      date: reporte['date'] ?? '', // Maneja valores nulos proporcionando un valor predeterminado
-                      time: reporte['time'] ?? '', // Maneja valores nulos proporcionando un valor predeterminado
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-              ],
-            );
-          },
-        ),
+          Map<String, List<Map<String, dynamic>>> piscinasReportes = {};
+          snapshot.data?.docs.forEach((doc) {
+            piscinasReportes[doc.id] = List<Map<String, dynamic>>.from(doc['reportes']);
+          });
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ListView.builder(
+              itemCount: piscinasReportes.length,
+              itemBuilder: (context, index) {
+                String piscina = piscinasReportes.keys.elementAt(index);
+                List<Map<String, dynamic>> reportes = piscinasReportes[piscina] ?? [];
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$piscina:',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    const SizedBox(height: 8),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: reportes.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> reporte = reportes[index];
+                        return ReportCard(
+                          key: ValueKey(index), 
+                          title: reporte['title'] ?? '', 
+                          date: reporte['date'] != null ? DateFormat('yyyy-MM-dd').format(reporte['date'].toDate()) : '', 
+                          time: reporte['time'] ?? '', 
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
@@ -69,11 +70,11 @@ class ViewsDataScreen extends StatelessWidget {
 
 class ReportCard extends StatelessWidget {
   const ReportCard({
-    super.key, // Agrega un parámetro de clave
-    this.title = '', // Proporciona valores predeterminados y permite valores nulos
-    this.date = '', // Proporciona valores predeterminados y permite valores nulos
-    this.time = '', // Proporciona valores predeterminados y permite valores nulos
-  }); // Llama al constructor super con la clave
+    Key? key,
+    required this.title,
+    required this.date,
+    required this.time,
+  }) : super(key: key);
 
   final String title;
   final String date;
